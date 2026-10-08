@@ -24,3 +24,5 @@ Never commit `.env`, local IDE configuration or dependency folders.
 Step 2 includes adaptive Memory Grid practice, timed games, ranked rules v2, action retries, and same-browser session recovery. Backend migrations must be upgraded at the same time. Game-engine tests: `npm test`.
 
 Step 3 adds `/admin` with Overview, Users, Games, Challenges, Results, Content and Audit. The backend must be migrated to 0003. Provision your first admin using the operator command in the backend README; refresh the browser to see the Admin link. Game settings and public content come from the API; published challenge configuration remains fixed.
+
+Step 4: /settings supports username/password updates and sign out everywhere; /dashboard and /progress show per-game metrics, UTC streaks and paginated activity. Pull the matching backend and restart both servers.
