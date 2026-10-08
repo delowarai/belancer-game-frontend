@@ -5,6 +5,8 @@
 
 /* Brand surfaces and interactive states. */
 header{background:var(--color-canvas)}
+.account-profile{display:inline-flex;align-items:center;gap:10px}
+.account-avatar{width:36px;height:36px;display:grid;place-items:center;border-radius:50%;background:var(--color-soft);color:var(--color-deep);font-size:15px;font-weight:700;text-transform:uppercase}
 button,.button{transition:background-color 150ms,color 150ms,box-shadow 150ms}
 .secondary{background:var(--color-surface);color:var(--color-deep);border-color:var(--color-border)}
 .secondary:hover{background:var(--color-soft);filter:none}
@@ -137,7 +139,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .recall-sequence{margin:32px 0;font-size:clamp(36px,9vw,58px);font-weight:750;letter-spacing:.2em;color:var(--color-teal)}
 .additional-practice .word-form{margin-top:24px}
 .brain-info{margin:0 calc(50% - 50vw)}
-.brain-info>section{padding:64px max(24px,calc((100% - 1050px)/2))}
+.brain-info>section{padding:56px max(24px,calc((100% - 1224px)/2))}
 .brain-info h2{font-size:clamp(30px,3.2vw,38px);letter-spacing:-1px}
 .brain-info p{font-size:17px}
 .brain-info-intro{display:grid;grid-template-columns:1.3fr .7fr;align-items:center;gap:50px;background:var(--color-surface)}
@@ -150,7 +152,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .brain-info-heading{max-width:700px;margin:0 auto 26px;text-align:center}
 .brain-info-heading h2{margin-bottom:8px}
 .brain-info-heading p{margin:0}
-.skill-cards{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px}
+.skill-cards{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
 .skill-card,.about-cards article{padding:20px 16px;border:1px solid var(--color-border);border-radius:15px;background:var(--color-surface)}
 .skill-icon{display:grid;width:36px;height:36px;place-items:center;border-radius:12px;background:var(--color-soft);color:var(--color-teal);font-size:19px}
 .skill-icon-2{background:var(--color-warning-soft);color:var(--color-warning)}

@@ -15,8 +15,13 @@ const fallbackFaq=[
   {question:'Are practice games ranked?',answer:'No. Locally hosted practice games are for fun and do not submit results to ranked leaderboards.'},
 ];
 
+const additionalFaq=[
+  {question:'Can I play on my phone?',answer:'Yes. The games and catalog are designed to adapt to smaller screens, so you can play in a mobile browser.'},
+  {question:'How can I get better at a game?',answer:'Play at a comfortable pace, learn each game’s rules and try a few practice rounds. Results can vary from one round to another.'},
+];
+
 export default function BrainGamesInfo({faq=[]}:{faq?:any[]}){
-  const questions=faq.length?faq:fallbackFaq;
+  const questions=[...(faq.length?faq:fallbackFaq),...additionalFaq];
   return <div className="brain-info">
     <section className="brain-info-intro"><div className="brain-info-copy"><div className="eyebrow">A LITTLE CONTEXT</div><h2>What are brain games?</h2><p>Brain games are short puzzles and activities built around tasks like remembering a pattern, spotting a detail or solving a problem. Each game gives you a simple way to practise that activity and see how you did.</p><p>They’re meant for play and practice—not to diagnose a condition or promise changes to your health or intelligence.</p><a className="text-link" href="/games">Explore the games <span aria-hidden="true">↗</span></a></div><div className="brain-info-note"><span aria-hidden="true">✦</span><strong>Pick a game. Take a few minutes. Enjoy the challenge.</strong></div></section>
 
