@@ -19,6 +19,8 @@ This produces `dist/` for hosting. Vite preview previews static output only; it 
 
 Smoke check: register, log out, log in, play a Math Sprint challenge, open the leaderboard and dashboard. Practice can run without login; ranked challenges require the API.
 
+The games catalog groups activities by skill and includes several local practice games in each category. Local practice scores are not stored in ranked progress or leaderboards; ranked play remains limited to games supported by the backend. The homepage also explains the available skill areas, offers play tips and FAQs, and links visitors to the game catalog and daily challenges.
+
 Never commit `.env`, local IDE configuration or dependency folders.
 
 Step 2 includes adaptive Memory Grid practice, timed games, ranked rules v2, action retries, and same-browser session recovery. Backend migrations must be upgraded at the same time. Game-engine tests: `npm test`.
