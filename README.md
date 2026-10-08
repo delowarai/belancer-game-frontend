@@ -26,3 +26,5 @@ Step 2 includes adaptive Memory Grid practice, timed games, ranked rules v2, act
 Step 3 adds `/admin` with Overview, Users, Games, Challenges, Results, Content and Audit. The backend must be migrated to 0003. Provision your first admin using the operator command in the backend README; refresh the browser to see the Admin link. Game settings and public content come from the API; published challenge configuration remains fixed.
 
 Step 4: /settings supports username/password updates and sign out everywhere; /dashboard and /progress show per-game metrics, UTC streaks and paginated activity. Pull the matching backend and restart both servers.
+
+Step 5: /leaderboards supports daily, weekly and all-time periods, UTC dates, challenge setting profiles, your rank and pagination. Pull the matching backend before restarting.
