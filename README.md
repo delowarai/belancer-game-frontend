@@ -28,3 +28,5 @@ Step 3 adds `/admin` with Overview, Users, Games, Challenges, Results, Content a
 Step 4: /settings supports username/password updates and sign out everywhere; /dashboard and /progress show per-game metrics, UTC streaks and paginated activity. Pull the matching backend and restart both servers.
 
 Step 5: /leaderboards supports daily, weekly and all-time periods, UTC dates, challenge setting profiles, your rank and pagination. Pull the matching backend before restarting.
+
+Brand palette: all screens use the Belancer UI/UX Kit 2026 colors through src/theme.css. See [docs/BRAND_THEME.md](docs/BRAND_THEME.md) for tokens and visual validation. Restart Vite after pulling.

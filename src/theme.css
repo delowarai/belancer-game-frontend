@@ -1,0 +1,35 @@
+/* Belancer Web UI & UX Kit 2026, sampled from its original embedded artwork.
+   Keep all application colors here; component styles consume semantic tokens. */
+:root {
+  --color-ink: #101615;
+  --color-deep: #0B3D3A;
+  --color-deep-hover: #124C47;
+  --color-teal: #1F7A70;
+  --color-mint: #9ED8CF;
+  --color-lime: #D2F53C;
+  --color-canvas: #F6F3EE;
+  --color-surface: #FFFFFF;
+  --color-soft: #EEF8F6;
+  --color-neutral: #EFEBE4;
+  --color-border: #E3DED6;
+  --color-muted: #5E5A53;
+  --color-clay: #C2532D;
+  --color-danger: #B42318;
+  --color-danger-soft: #FEEDEB;
+  --color-warning: #8A5C00;
+  --color-warning-soft: #FFF4D6;
+  --color-shadow: rgb(11 61 58 / 8%);
+  --color-highlight-shadow: rgb(11 61 58 / 20%);
+  --color-focus: var(--color-teal);
+  --game-memory-bg: var(--color-deep);
+  --game-memory-fg: var(--color-lime);
+  --game-pairs-bg: var(--color-mint);
+  --game-pairs-fg: var(--color-deep);
+  --game-speed-bg: var(--color-clay);
+  --game-speed-fg: var(--color-surface);
+  --game-focus-bg: var(--color-teal);
+  --game-focus-fg: var(--color-surface);
+  --game-math-bg: var(--color-lime);
+  --game-math-fg: var(--color-ink);
+  accent-color: var(--color-teal);
+}
