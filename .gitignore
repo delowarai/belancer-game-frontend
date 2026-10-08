@@ -1,2 +1,7 @@
-# Project exclude paths
-/dist/
+node_modules/
+dist/
+*.tsbuildinfo
+.idea/
+.env
+.env.local
+.test-build/
