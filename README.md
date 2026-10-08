@@ -9,6 +9,8 @@ npm run dev
 
 Open http://localhost:5173. The backend must be running on http://localhost:8000. Vite proxies `/api` to it; cookies stay on the browser origin. Port 5173 is enforced so the frontend origin matches the backend CSRF configuration. If it is occupied, stop the other server first.
 
+The proxy connects directly to `127.0.0.1:8000` to avoid localhost IPv6 resolution differences. The updated backend also accepts opening the frontend at `http://127.0.0.1:5173` during local development. Use one hostname consistently after login.
+
 ```powershell
 npm run build
 ```

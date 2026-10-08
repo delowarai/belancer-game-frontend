@@ -1,6 +1,18 @@
 export async function api<T = any>(path: string, body?: unknown): Promise<T> {
-  const res = await fetch('/api' + path, {credentials:'same-origin', headers:{'Content-Type':'application/json','X-Requested-With':'Belancer'}, ...(body === undefined ? {} : {method:'POST',body:JSON.stringify(body)})});
-  const data = await res.json().catch(() => ({detail:'Connection failed'}));
+  let res: Response;
+  try {
+    res = await fetch('/api' + path, {credentials:'same-origin', headers:{'Content-Type':'application/json','X-Requested-With':'Belancer'}, ...(body === undefined ? {} : {method:'POST',body:JSON.stringify(body)})});
+  } catch {
+    throw new Error('Cannot connect. Check that the frontend and backend servers are running.');
+  }
+  const raw = await res.text();
+  let data: any;
+  try { data = JSON.parse(raw); }
+  catch {
+    if (res.status >= 500) throw new Error('Backend unavailable. Check the PyCharm server on port 8000 and its terminal errors.');
+    if (!res.ok) throw new Error(`Request failed (${res.status}). Check the backend terminal.`);
+    throw new Error('The server returned an unexpected response. Check the API proxy configuration.');
+  }
   if (!res.ok) throw new Error(typeof data.detail === 'string' ? data.detail : 'Please check your input');
   return data;
 }
