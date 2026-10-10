@@ -1,0 +1,30 @@
+/* Self-hosted variable fonts: consistent rendering without third-party requests. */
+:root {
+  --font-body: 'DM Sans Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-heading: 'Manrope Variable', ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-body);
+}
+body,button,input,select,textarea {font-family:var(--font-body)}
+/* Full-width sections use 100vw; clip their scrollbar-width overhang. */
+body {overflow-x:clip}
+h1,h2,h3,.hero-stats strong,.admin-stats strong,.stats strong {
+  font-family:var(--font-heading);
+  font-weight:750;
+  letter-spacing:-.035em;
+}
+.hero h1 {
+  font-weight:800;
+  line-height:1.12;
+  letter-spacing:-.045em;
+}
+.hero h1 em {
+  font-family:inherit;
+  font-style:normal;
+  font-weight:inherit;
+}
+p {line-height:1.75}
+button,.button,nav,.account {font-weight:650}
+.eyebrow,.tag {font-family:var(--font-body);font-weight:700;letter-spacing:.16em}
+.steps span,.tip-list article>span {font-family:var(--font-heading);font-weight:750}
+table,.game-top,.hero-stats,.admin-stats {font-variant-numeric:tabular-nums}
+@media(max-width:680px){.hero h1{font-size:clamp(34px,9.5vw,52px);line-height:1.16;letter-spacing:-.035em}}
