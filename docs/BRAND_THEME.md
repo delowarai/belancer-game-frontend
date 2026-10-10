@@ -26,3 +26,5 @@ Coverage includes homepage/catalog, all five games, authentication, settings, ch
 Validation: TypeScript/Vite build and six existing game tests passed. Browser visual checks covered desktop/mobile homepage, practice Memory Grid selection, progress/login navigation and admin Games. Narrow homepage had equal content and viewport width (no horizontal overflow). Main color-pair contrast ratios: primary 14.70, body 16.53, muted 6.19, teal links 5.15, clay artwork 4.60, hero copy 7.56 and error text 5.80. This is color-pair verification, not a complete accessibility audit of every state.
 
 No dependency, API or database migration change is required. Pull frontend main and restart Vite.
+
+Typography: self-hosted Manrope Variable for headings and DM Sans Variable for body, controls and navigation. Hero emphasis keeps the mint/lime gradient with upright bold text. Numeric UI uses tabular figures. Font packages are pinned at 5.3.0 and use font-display swap. Verified on desktop and a narrow mobile viewport; production build and nine frontend tests passed. Run npm ci after pulling the font dependencies.
