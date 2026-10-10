@@ -22,7 +22,7 @@ export default function GamesCatalog({games}:{games:any[]}){
       if(!categoryGames.length)return null;
       return <section className="skill-section" id={`${categorySlug(category)}-games`} key={category}>
         <div className="section-heading"><div><h2>{category} Games</h2><p>{categoryInfo[category]}</p></div></div>
-        <div className="catalog-cards">{categoryGames.map(game=><a href={`/games/${game.slug}`} className="catalog-card" key={game.slug}>
+        <div className="catalog-cards">{categoryGames.map(game=><a href={`/play/${game.slug}`} className="catalog-card" key={game.slug}>
           <div className="catalog-art" style={{background:game.color,color:game.ink}} aria-hidden="true">
             <span className="catalog-art-mark">{game.icon}</span><span className="catalog-art-spark">✦</span>
           </div>

@@ -13,6 +13,8 @@ export default function GamePlayer({game,ranked,canStart=true,configuration,inst
   const storageKey=`belancer-ranked-${game}`,numberInput=useRef<HTMLInputElement>(null);
   function clearTimers(){timers.current.forEach(clearTimeout);timers.current=[]}
   useEffect(()=>{mounted.current=true;setResumeId(ranked?sessionStorage.getItem(storageKey)||'':'');return()=>{mounted.current=false;clearTimers()}},[game,ranked]);
+  // Practice opens immediately; ranked attempts still require explicit confirmation.
+  useEffect(()=>{if(!ranked&&canStart)void begin()},[game,ranked]);
   useEffect(()=>{if(phase!=='countdown')return;if(countdown===0){void begin();return}const t=setTimeout(()=>setCountdown(c=>c-1),1000);return()=>clearTimeout(t)},[phase,countdown]);
   useEffect(()=>{if(phase!=='playing')return;const t=setInterval(()=>{const now=Date.now()+offset.current;setClock(now);if(now>=deadline&&!running.current)finishRef.current()},100);return()=>clearInterval(t)},[phase,deadline]);
   useEffect(()=>{if(phase==='playing'&&game==='math-sprint'&&!busy)numberInput.current?.focus()},[phase,round,busy,game]);
@@ -82,7 +84,7 @@ export default function GamePlayer({game,ranked,canStart=true,configuration,inst
       {game==='math-sprint'&&question&&<form onSubmit={e=>{e.preventDefault();if(number.trim()&&Number.isSafeInteger(Number(number)))answer(Number(number))}}><div className="symbols">{question[0]} + {question[1]}</div><input ref={numberInput} aria-label="Your answer" type="number" step="1" value={number} onChange={e=>setNumber(e.target.value)} disabled={busy} autoFocus required/><button disabled={busy}>Submit answer</button></form>}
       {busy&&<p role="status">Checking answer…</p>}
     </>}
-    {phase==='results'&&result&&<><h2>{result.status==='validated'?'Result validated':'Practice complete'}</h2><div className="stats"><div><strong>{result.score}</strong>points</div><div><strong>{result.accuracy}%</strong>accuracy</div><div><strong>{((result.playDuration||result.duration)/1000).toFixed(1)}s</strong>play time</div></div><p>{result.correct} correct · {result.errors} errors{game==='memory-grid'?` · ${result.correctRounds} complete patterns`:''}</p><div className="actions"><button onClick={()=>{setResumeId('');setPhase('instructions')}}>Play again</button><a className="button secondary" href={`/leaderboards?game=${game}`}>Leaderboard</a></div></>}
+    {phase==='results'&&result&&<><h2>{result.status==='validated'?'Result validated':'Practice complete'}</h2><div className="stats"><div><strong>{result.score}</strong>points</div><div><strong>{result.accuracy}%</strong>accuracy</div><div><strong>{((result.playDuration||result.duration)/1000).toFixed(1)}s</strong>play time</div></div><p>{result.correct} correct · {result.errors} errors{game==='memory-grid'?` · ${result.correctRounds} complete patterns`:''}</p><div className="actions"><button onClick={()=>{setResumeId('');if(ranked)setPhase('instructions');else void begin()}}>Play again</button><a className="button secondary" href={`/leaderboards?game=${game}`}>Leaderboard</a></div></>}
     {phase==='error'&&<div className="actions"><button disabled={busy||!pending.current} onClick={()=>{if(pending.current)void request(pending.current.path,pending.current.body)}}>Retry same action</button><button className="secondary" disabled={busy||!session} onClick={()=>{if(session)void resumeSession(session.id)}}>Reload session</button></div>}
   </section>;
 }

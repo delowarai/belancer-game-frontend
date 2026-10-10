@@ -21,9 +21,10 @@ export default function TicTacToe(){
     return()=>clearTimeout(next);
   },[phase,countdown]);
 
+  useEffect(()=>{start()},[]);
   function start(){
     if(timer.current)clearTimeout(timer.current);
-    setBoard(emptyBoard());setOutcome(null);setThinking(false);setCountdown(3);setPhase('countdown');
+    setBoard(emptyBoard());setOutcome(null);setThinking(false);setCountdown(3);setPhase('playing');
   }
   function finish(next:TicTacToeMark[]){
     const result=ticTacToeOutcome(next);

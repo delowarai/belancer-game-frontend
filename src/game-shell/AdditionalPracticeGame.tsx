@@ -109,6 +109,7 @@ export default function AdditionalPracticeGame({slug,name}:Props){
     return()=>clearTimeout(timer);
   },[slug,phase,sequenceVisible,sequence]);
 
+  useEffect(()=>{start()},[]);
   function start(){
     setRound(0);setScore(0);setFeedback('');setAnswered(false);setEntry('');
     setQuestion(questionFor(slug,0));setPhase('playing');

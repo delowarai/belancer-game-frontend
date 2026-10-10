@@ -68,6 +68,7 @@ export default function ExtraPracticeGames({mode}:{mode:Mode}){
     while(values.length<length){const value=Math.floor(Math.random()*16);if(!values.includes(value))values.push(value)}
     setSequence(values);setSelected([]);setRevealStep(0);setHighlighted(null);setShowing(true);
   }
+  useEffect(()=>{start()},[]);
   function start(){
     setRound(0);setScore(0);setFeedback('');setRoundDone(false);setGuess('');
     setColorQuestion(nextColorQuestion());setOddQuestion(nextOddQuestion());setWordQuestion(nextWordQuestion(0));
