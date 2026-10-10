@@ -3,6 +3,8 @@
 :root {
   --color-ink: #101615;
   --color-deep: #0B3D3A;
+  --color-text-deep: #0B3D3A;
+  --color-on-dark: #FFFFFF;
   --color-deep-hover: #124C47;
   --color-teal: #1F7A70;
   --color-mint: #9ED8CF;
@@ -32,4 +34,30 @@
   --game-math-bg: var(--color-lime);
   --game-math-fg: var(--color-ink);
   accent-color: var(--color-teal);
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --color-ink: #EDF5F2;
+  --color-text-deep: #9ED8CF;
+  --color-teal: #70C3B5;
+  --color-canvas: #101B1B;
+  --color-surface: #172726;
+  --color-soft: #203C38;
+  --color-neutral: #253532;
+  --color-border: #38514B;
+  --color-muted: #B5C8C0;
+  --color-clay: #E29270;
+  --color-danger: #FFAAA2;
+  --color-danger-soft: #472D2B;
+  --color-warning: #F1D48A;
+  --color-warning-soft: #3D3521;
+  --color-shadow: rgb(0 0 0 / 20%);
+  --color-highlight-shadow: rgb(0 0 0 / 35%);
+  --game-speed-bg: #C2532D;
+  --game-speed-fg: var(--color-on-dark);
+  --game-focus-bg: #1F7A70;
+  --game-focus-fg: var(--color-on-dark);
+  --game-math-fg: #101615;
 }

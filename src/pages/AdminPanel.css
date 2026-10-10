@@ -8,7 +8,7 @@ main:has(.admin-shell){max-width:1480px}
 .admin-nav-label{padding:0 12px;color:var(--color-muted);font-size:10px;font-weight:700;letter-spacing:.16em}
 .admin-shell .admin-nav{display:flex;flex-direction:column;gap:6px;margin:14px 0 28px}
 .admin-shell .admin-nav button{display:flex;justify-content:start;width:100%;min-height:46px;padding:12px;border:0;border-radius:10px;background:transparent;color:var(--color-muted);font-size:13px;gap:12px;filter:none;text-align:left}
-.admin-shell .admin-nav button:hover{background:var(--color-soft);color:var(--color-deep)}
+.admin-shell .admin-nav button:hover{background:var(--color-soft);color:var(--color-text-deep)}
 .admin-shell .admin-nav button.selected{background:var(--color-deep);color:var(--color-lime)}
 .admin-nav i{width:6px;height:6px;margin-left:auto;border-radius:50%;background:currentColor}
 .admin-sidebar-note{margin-top:auto;padding:20px 12px 4px;border-top:1px solid var(--color-border);color:var(--color-teal)}
@@ -21,7 +21,7 @@ main:has(.admin-shell){max-width:1480px}
 .admin-page-heading p{max-width:600px;margin:0;font-size:13px}
 .admin-refresh{white-space:nowrap;min-height:40px;font-size:12px}
 .admin-context{display:flex;justify-content:space-between;gap:15px;margin:20px 0 26px;padding-bottom:18px;border-bottom:1px solid var(--color-border);font-size:10px;color:var(--color-muted)}
-.admin-welcome{position:relative;display:flex;align-items:center;justify-content:space-between;gap:28px;overflow:hidden;padding:30px 32px;border-radius:18px;background:var(--color-deep);color:var(--color-surface)}
+.admin-welcome{position:relative;display:flex;align-items:center;justify-content:space-between;gap:28px;overflow:hidden;padding:30px 32px;border-radius:18px;background:var(--color-deep);color:var(--color-on-dark)}
 .admin-welcome .eyebrow{color:var(--color-mint);font-size:9px}
 .admin-shell .admin-welcome h2{max-width:420px;margin:12px 0;font-size:28px;line-height:1.25}
 .admin-welcome p{max-width:410px;margin-bottom:22px;font-size:12px;color:var(--color-mint)}
@@ -61,7 +61,7 @@ main:has(.admin-shell){max-width:1480px}
 .admin-shell tbody tr:hover{background:var(--color-soft)}
 .admin-shell td .small{font-size:10px;padding:8px 12px;white-space:nowrap}
 .admin-badge{display:inline-flex;align-items:center;gap:6px;margin:2px 5px 2px 0;padding:5px 8px;border-radius:6px;font-size:9px;font-weight:650;background:var(--color-neutral);color:var(--color-muted);white-space:nowrap}
-.admin-badge.positive{background:var(--color-soft);color:var(--color-deep)}
+.admin-badge.positive{background:var(--color-soft);color:var(--color-text-deep)}
 .admin-badge.negative{background:var(--color-danger-soft);color:var(--color-danger)}
 .admin-badge.warning{background:var(--color-warning-soft);color:var(--color-warning)}
 .admin-shell .admin-search{margin:0 0 20px;padding:18px 20px;border:1px solid var(--color-border);border-radius:14px;background:var(--color-surface)}
