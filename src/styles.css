@@ -12,7 +12,8 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .secondary{background:var(--color-neutral);color:var(--color-deep)}
 .small{padding:10px 16px}
 .muted{color:var(--color-muted)}
-header{display:grid;width:100%;max-width:1320px;height:96px;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:24px;margin:0 auto;padding:0 48px;border-bottom:1px solid var(--color-border)}
+header{width:100%;border-bottom:1px solid var(--color-border)}
+.header-inner{display:grid;width:100%;max-width:1320px;min-height:96px;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:24px;margin:0 auto;padding:0 48px}
 .brand{display:flex;align-items:center;gap:8px;font-size:22px;font-weight:800;letter-spacing:-1px}
 .brand-icon{padding:1px 9px 4px;border-radius:9px;background:var(--color-deep);color:var(--color-surface);font-size:26px}
 .brand-game{padding-left:4px;color:var(--color-muted);font-size:12px;letter-spacing:2px;text-transform:uppercase}
@@ -110,10 +111,10 @@ footer .brand{color:var(--color-deep);font-size:18px}
 footer p{margin:12px 0;font-size:12px}
 footer>div{display:flex;gap:24px;margin:22px 0;font-size:11px}
 footer small{font-size:10px}
-@media(max-width:1000px){header{padding:0 24px;gap:16px}header nav{gap:15px}}
+@media(max-width:1000px){.header-inner{padding:0 24px;gap:16px}header nav{gap:15px}}
 @media(max-width:1000px){.cards{grid-template-columns:repeat(3,minmax(0,1fr))}.challenge-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.hero{gap:30px}.hero-art{padding:25px}.hero-note{gap:9px}}
 @media(max-width:680px){
-  header{height:auto;min-height:80px;grid-template-columns:1fr auto;padding:16px 20px;gap:15px}
+  .header-inner{min-height:80px;grid-template-columns:1fr auto;padding:16px 20px;gap:15px}
   .brand{font-size:19px}
   .brand-game{display:none}
   header nav{grid-column:1/-1;grid-row:2;width:100%;justify-content:space-between}
