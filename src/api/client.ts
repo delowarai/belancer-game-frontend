@@ -13,6 +13,13 @@ export async function api<T = any>(path: string, body?: unknown): Promise<T> {
     if (!res.ok) throw new Error(`Request failed (${res.status}). Check the backend terminal.`);
     throw new Error('The server returned an unexpected response. Check the API proxy configuration.');
   }
-  if (!res.ok) throw new Error(typeof data.detail === 'string' ? data.detail : 'Please check your input');
+  if (!res.ok) {
+    const detail = data.detail;
+    if (typeof detail === 'string') throw new Error(detail);
+    if (Array.isArray(detail) && detail.length) {
+      throw new Error(detail.map((item:any) => `${(item.loc || []).filter((x:string) => x !== 'body').join(' · ')}: ${item.msg || 'Invalid value'}`).join('; '));
+    }
+    throw new Error('Please check your input');
+  }
   return data;
 }
