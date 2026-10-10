@@ -12,11 +12,13 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .secondary{background:var(--color-neutral);color:var(--color-deep)}
 .small{padding:10px 16px}
 .muted{color:var(--color-muted)}
-header{display:flex;width:100%;max-width:1320px;height:96px;align-items:center;justify-content:space-between;gap:20px;margin:0 auto;padding:0 48px;border-bottom:1px solid var(--color-border)}
+header{display:grid;width:100%;max-width:1320px;height:96px;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:24px;margin:0 auto;padding:0 48px;border-bottom:1px solid var(--color-border)}
 .brand{display:flex;align-items:center;gap:8px;font-size:22px;font-weight:800;letter-spacing:-1px}
 .brand-icon{padding:1px 9px 4px;border-radius:9px;background:var(--color-deep);color:var(--color-surface);font-size:26px}
 .brand-game{padding-left:4px;color:var(--color-muted);font-size:12px;letter-spacing:2px;text-transform:uppercase}
 nav,.account{display:flex;align-items:center;gap:28px;font-size:13px;font-weight:600}
+header nav{justify-self:center;white-space:nowrap}
+.account{justify-self:end;white-space:nowrap}
 main{width:100%;max-width:1224px;flex:1 0 auto;margin:0 auto;padding:0 24px}
 section{padding:56px 0}
 h1,h2,h3,p{margin-top:0}
@@ -84,6 +86,21 @@ th{color:var(--color-muted);font-size:10px;letter-spacing:1px;text-transform:upp
 .you{background:var(--color-soft)}
 .challenge-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:30px}
 .challenge-list h2{margin:12px 0}
+.challenge-page{padding-top:46px}
+.challenge-page .catalog-intro{padding-bottom:26px}
+.challenge-note{display:flex;align-items:center;justify-content:center;gap:10px 24px;flex-wrap:wrap;margin:0 0 30px;padding:18px 22px;border:1px solid var(--color-border);border-radius:14px;background:var(--color-soft);font-size:14px}
+.challenge-note strong{color:var(--color-deep)}
+.challenge-note span{color:var(--color-muted)}
+.challenge-note a{color:var(--color-teal);font-weight:650}
+.challenge-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
+.challenge-card{display:flex;min-width:0;flex-direction:column;overflow:hidden;border:1px solid var(--color-border);border-radius:14px;background:var(--color-surface);box-shadow:0 2px 4px rgb(16 22 21 / 4%)}
+.challenge-card .catalog-art{height:150px}
+.challenge-card .catalog-copy{width:100%}
+.challenge-card .catalog-copy h2{margin:10px 0 8px;font-size:25px;line-height:1.3}
+.challenge-card .challenge-config,.challenge-card .challenge-attempts{margin:0 0 8px;font-size:15px;line-height:1.55}
+.challenge-card .challenge-attempts{margin-bottom:18px}
+.challenge-card .catalog-play{margin-top:auto}
+.challenge-status{display:flex;width:100%;min-height:48px;align-items:center;justify-content:center;border:1px solid var(--color-border);border-radius:999px;color:var(--color-muted);font-size:15px;font-weight:600}
 .game-detail{max-width:650px;margin:45px auto}
 .game-detail .game-art{margin-bottom:24px;border-radius:12px}
 .prose{max-width:800px;margin:45px auto}
@@ -93,13 +110,13 @@ footer .brand{color:var(--color-deep);font-size:18px}
 footer p{margin:12px 0;font-size:12px}
 footer>div{display:flex;gap:24px;margin:22px 0;font-size:11px}
 footer small{font-size:10px}
-@media(max-width:1000px){header{padding:0 24px}header nav{gap:15px}}
-@media(max-width:1000px){.cards{grid-template-columns:repeat(3,minmax(0,1fr))}.hero{gap:30px}.hero-art{padding:25px}.hero-note{gap:9px}}
+@media(max-width:1000px){header{padding:0 24px;gap:16px}header nav{gap:15px}}
+@media(max-width:1000px){.cards{grid-template-columns:repeat(3,minmax(0,1fr))}.challenge-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.hero{gap:30px}.hero-art{padding:25px}.hero-note{gap:9px}}
 @media(max-width:680px){
-  header{height:auto;min-height:80px;flex-wrap:wrap;padding:16px 20px;gap:15px}
+  header{height:auto;min-height:80px;grid-template-columns:1fr auto;padding:16px 20px;gap:15px}
   .brand{font-size:19px}
   .brand-game{display:none}
-  header nav{order:3;width:100%;justify-content:space-between}
+  header nav{grid-column:1/-1;grid-row:2;width:100%;justify-content:space-between}
   .account{gap:10px;font-size:11px}
   .small{padding:8px 12px}
   .cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
@@ -114,6 +131,9 @@ footer small{font-size:10px}
   .steps{grid-template-columns:1fr;gap:20px}
   .steps p{max-width:300px}
   .challenge-list{grid-template-columns:1fr}
+  .challenge-page{padding-top:32px}
+  .challenge-note{align-items:flex-start;flex-direction:column;gap:8px;margin-bottom:22px}
+  .challenge-grid{grid-template-columns:1fr;gap:16px}
   .panel{padding:24px}
   .stats{gap:15px}
   .stats strong{font-size:27px}
