@@ -9,4 +9,11 @@
 .bird-result{padding:20px;border-radius:14px;background:var(--color-soft);text-align:center}
 .bird-result h2{margin-bottom:8px}
 .bird-result p{margin:0;color:var(--color-text-deep);font-size:24px}
+.bird-result button{margin-top:16px}
+.bird-result p+p{font-size:16px;margin-top:10px}
+.bird-levels{display:flex;flex-wrap:wrap;gap:8px;margin:22px 0}
+.bird-levels button{min-width:48px;padding:10px 14px}
+.bird-levels button:disabled{opacity:.45;cursor:not-allowed}
+.bird-reward-preview{padding:14px;border-radius:12px;background:var(--color-soft)}
+.bird-launch canvas:focus-visible{outline:3px solid var(--color-text-deep);outline-offset:3px}
 @media(max-width:680px){.bird-launch{padding:16px;margin:20px 0}.bird-launch .section-heading{align-items:start;flex-direction:column;gap:14px}.bird-launch .game-top{font-size:12px;flex-wrap:wrap;gap:10px}.bird-controls{gap:14px}.bird-controls button{width:100%}.bird-launch canvas{border-radius:10px}}
