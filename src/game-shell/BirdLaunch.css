@@ -1,0 +1,12 @@
+.bird-launch{margin:28px 0;max-width:none}
+.bird-launch h1{font-size:clamp(28px,4vw,42px);margin-bottom:12px}
+.bird-launch .section-heading p{margin-bottom:0}
+.bird-launch canvas{display:block;width:100%;height:auto;margin-top:20px;border-radius:16px;border:1px solid var(--color-border);touch-action:none;cursor:grab}
+.bird-launch canvas:active{cursor:grabbing}
+.bird-controls{display:flex;align-items:center;gap:24px;flex-wrap:wrap;margin:24px 0}
+.bird-controls label{flex:1;min-width:150px}
+.bird-controls input{padding:0;margin:12px 0 0;cursor:pointer}
+.bird-result{padding:20px;border-radius:14px;background:var(--color-soft);text-align:center}
+.bird-result h2{margin-bottom:8px}
+.bird-result p{margin:0;color:var(--color-text-deep);font-size:24px}
+@media(max-width:680px){.bird-launch{padding:16px;margin:20px 0}.bird-launch .section-heading{align-items:start;flex-direction:column;gap:14px}.bird-launch .game-top{font-size:12px;flex-wrap:wrap;gap:10px}.bird-controls{gap:14px}.bird-controls button{width:100%}.bird-launch canvas{border-radius:10px}}
