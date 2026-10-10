@@ -100,3 +100,20 @@ main:has(.admin-shell){max-width:1480px}
 @media(max-width:780px){.admin-shell{grid-template-columns:1fr;gap:20px}.admin-shell .admin-sidebar{position:static;min-height:0;padding:18px}.admin-sidebar-brand{margin-bottom:18px}.admin-nav-label,.admin-sidebar-note{display:none}.admin-shell .admin-nav{flex-direction:row;flex-wrap:wrap;margin:0;gap:6px}.admin-shell .admin-nav button{width:auto;min-height:38px;padding:10px;font-size:11px;gap:6px}.admin-nav i{display:none}.admin-nav svg{width:15px;height:15px}.admin-shell .admin-page-heading{align-items:start}.admin-shell .admin-page-heading p{font-size:12px}.admin-refresh{padding:9px 12px;font-size:10px}.admin-welcome{padding:24px}.admin-shell .admin-welcome h2{font-size:24px}.admin-welcome-art{width:88px;gap:7px}.admin-welcome-art i{border-radius:6px}.admin-metrics{gap:10px}.admin-shell .admin-metric{padding:16px;gap:16px}.admin-shell .admin-editor{padding:20px}.admin-context{font-size:9px}.admin-search .admin-record-count{margin-left:0}.admin-footnote{align-items:start}.admin-shell .admin-toolbar{align-items:stretch}.admin-shell .admin-toolbar label{min-width:130px}}
 @media(max-width:420px){.admin-welcome-art{display:none}.admin-shell .admin-page-heading{flex-direction:column;gap:14px}.admin-shell h1{font-size:30px}.admin-metric strong{font-size:28px}.metric-top svg{width:16px}.admin-surface{padding:20px}}
 @media(prefers-reduced-motion:reduce){.admin-spinner{animation:none}}
+/* Use the available desktop space for a larger, readable control menu. */
+@media(min-width:1101px){
+  main:has(.admin-shell){max-width:none;padding:0 28px}
+  .admin-shell{grid-template-columns:280px minmax(0,1fr);gap:28px;padding:20px 0 28px}
+  .admin-shell .admin-sidebar{top:16px;height:calc(100dvh - 152px);min-height:0;overflow-y:auto;padding:28px 20px}
+  .admin-sidebar-brand{gap:14px;margin:0 4px 28px}
+  .admin-sidebar-brand strong{font-size:19px}
+  .admin-sidebar-brand small{font-size:13px}
+  .admin-brand-mark{width:46px;height:46px;flex-shrink:0}
+  .admin-brand-mark svg{width:24px;height:24px}
+  .admin-nav-label{font-size:11px}
+  .admin-shell .admin-nav{gap:8px;margin:16px 0 24px}
+  .admin-shell .admin-nav button{min-height:56px;padding:16px;font-size:16px;gap:14px;flex-shrink:0}
+  .admin-nav svg{width:22px;height:22px;flex-shrink:0}
+  .admin-sidebar-note p{font-size:13px}
+  .admin-sidebar-note a{font-size:13px}
+}
