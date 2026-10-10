@@ -13,7 +13,7 @@ export default function GamesCatalog({games}:{games:any[]}){
   const categories=Object.keys(categoryInfo).filter(category=>games.some(game=>game.category===category));
 
   return <section className="games-catalog">
-    <div className="catalog-intro"><div className="eyebrow">FIND YOUR NEXT FAVORITE</div><h1>Explore games by skill.</h1><p>Pick a skill, find a game and play at your own pace.</p></div>
+    <div className="catalog-intro"><div className="eyebrow">FIND YOUR NEXT FAVORITE</div><h1>Find your next challenge.</h1><p>Choose a skill, discover a game, and enjoy a little time for your mind.</p></div>
     <nav className="skill-filter" aria-label="Filter games by skill">
       {categories.map(category=><a key={category} href={`#${categorySlug(category)}-games`}>{category}</a>)}
     </nav>
