@@ -1,7 +1,7 @@
 import {useEffect,useRef,useState} from 'react';
 import {Bodies,Body,Composite,Engine,Events} from 'matter-js';
 import './BirdLaunch.css';
-import {birdLevels,readBirdProgress,completeBirdLevel,birdCoins,birdPoints,birdDifficulty} from '../games/birdLevels';
+import {birdLevels,readBirdProgress,completeBirdLevel,birdCoins,birdPoints,birdDifficulty,birdRewardReady} from '../games/birdLevels';
 import {aimPosition,dragAim,trajectory,BIRD_SPEED,BIRD_AIR,BIRD_GRAVITY} from '../games/birdAim';
 
 const W=1000,H=540,anchor={x:180,y:365};
@@ -13,9 +13,23 @@ export default function BirdLaunch(){
   const stage=useRef<HTMLDivElement>(null),audio=useRef<AudioContext|null>(null),soundEnabled=useRef(false),pausedRef=useRef(false);
   const [sound,setSound]=useState(false),[paused,setPaused]=useState(false),[expanded,setExpanded]=useState(false);
   function togglePause(){pausedRef.current=!pausedRef.current;setPaused(pausedRef.current)}
-  function tone(frequency:number,duration=.12){
+  function playSound(kind:'launch'|'pull'|'hit'|'win'|'toggle'){
     if(!soundEnabled.current)return;
-    try{const context=audio.current||(audio.current=new AudioContext());void context.resume().catch(()=>{});const oscillator=context.createOscillator(),gain=context.createGain();oscillator.type='sine';oscillator.frequency.setValueAtTime(frequency,context.currentTime);oscillator.frequency.exponentialRampToValueAtTime(frequency*.55,context.currentTime+duration);gain.gain.setValueAtTime(.07,context.currentTime);gain.gain.exponentialRampToValueAtTime(.001,context.currentTime+duration);oscillator.connect(gain);gain.connect(context.destination);oscillator.start();oscillator.stop(context.currentTime+duration)}catch{/* Audio is optional on unsupported browsers. */}
+    try{
+      const context=audio.current||(audio.current=new AudioContext());void context.resume().catch(()=>{});
+      const note=(frequency:number,delay:number,duration:number,volume:number,type:OscillatorType='sine',end=frequency)=>{
+        const oscillator=context.createOscillator(),gain=context.createGain(),at=context.currentTime+delay;
+        oscillator.type=type;oscillator.frequency.setValueAtTime(frequency,at);oscillator.frequency.exponentialRampToValueAtTime(end,at+duration);
+        gain.gain.setValueAtTime(0,at);gain.gain.linearRampToValueAtTime(volume,at+.012);gain.gain.exponentialRampToValueAtTime(.001,at+duration);
+        oscillator.connect(gain);gain.connect(context.destination);oscillator.start(at);oscillator.stop(at+duration+.02);
+        oscillator.onended=()=>{oscillator.disconnect();gain.disconnect()};
+      };
+      if(kind==='win'){[523.25,659.25,783.99,1046.5].forEach((pitch,index)=>{note(pitch,index*.14,.5,.075,'triangle');note(pitch*2,index*.14,.35,.025)});[523.25,659.25,783.99].forEach(pitch=>note(pitch,.58,.75,.035))}
+      else if(kind==='launch'){note(280,0,.23,.065,'triangle',950);note(1100,.12,.18,.025,'sine',700)}
+      else if(kind==='hit'){note(170,0,.13,.07,'triangle',75);note(880,.035,.22,.05);note(1320,.085,.18,.025)}
+      else if(kind==='pull')note(220,0,.12,.035,'triangle',340);
+      else{note(659.25,0,.16,.045);note(987.77,.09,.2,.035)}
+    }catch{/* Sound remains optional on unsupported browsers. */}
   }
   async function fullscreen(){try{if(document.fullscreenElement)await document.exitFullscreen();else await stage.current?.requestFullscreen()}catch{setExpanded(value=>!value)}}
   useEffect(()=>()=>{void audio.current?.close().catch(()=>{})},[]);
@@ -41,7 +55,7 @@ export default function BirdLaunch(){
     function newBird(){const body=Bodies.circle(anchor.x,anchor.y,23,{label:'bird',frictionAir:BIRD_AIR,restitution:.35,density:.004,friction:.4});Body.setStatic(body,true);return body}
     let bird=newBird();
     Composite.add(engine.world,[ground,...wood,...targets,bird]);
-    let shots=level.shots,hits=0,phase:View['phase']='ready',drag=false,pointer:number|null=null,shotAt=0,last=performance.now(),accumulator=0,frame=0;
+    let shots=level.shots,hits=0,phase:View['phase']='ready',drag=false,pointer:number|null=null,shotAt=0,last=performance.now(),accumulator=0,frame=0,clearedAt:number|null=null;
     const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;let shake=0;
     const trail:{x:number;y:number}[]=[],floating:{x:number;y:number;text:string;life:number}[]=[];
     const destroyed=new Set<number>(),queued=new Set<Body>(),sparks:{x:number;y:number;life:number}[]=[];
@@ -52,13 +66,13 @@ export default function BirdLaunch(){
     function key(event:KeyboardEvent){if(event.key.toLowerCase()==='p'){event.preventDefault();togglePause();return}if(pausedRef.current||phase!=='ready')return;const keys=['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','+','-','=',' '];if(!keys.includes(event.key))return;event.preventDefault();if(event.key===' '){launch();return}aim(Math.max(5,Math.min(65,aimAngle+(event.key==='ArrowUp'||event.key==='ArrowLeft'?2:event.key==='ArrowDown'||event.key==='ArrowRight'?-2:0))),Math.max(30,Math.min(100,aimPower+(event.key==='+'||event.key==='='?5:event.key==='-'?-5:0))))}
     function launch(){
       if(pausedRef.current||phase!=='ready')return;
-      tone(520,.18);
+      playSound('launch');
       const dx=anchor.x-bird.position.x,dy=anchor.y-bird.position.y;
       if(Math.hypot(dx,dy)<12)return;
       Body.setStatic(bird,false);Body.setVelocity(bird,{x:dx*BIRD_SPEED,y:dy*BIRD_SPEED});shots--;phase='flying';shotAt=0;drag=false;publish();
     }
     control.current={launch,aim};aim(20,90);
-    function hit(target:Body){if(destroyed.has(target.id))return;destroyed.add(target.id);queued.add(target);hits++;sparks.push({x:target.position.x,y:target.position.y,life:45});shake=8;tone(760+hits*100,.12);floating.push({x:target.position.x,y:target.position.y,text:'+100',life:60});publish()}
+    function hit(target:Body){if(destroyed.has(target.id))return;destroyed.add(target.id);queued.add(target);hits++;sparks.push({x:target.position.x,y:target.position.y,life:45});shake=8;playSound('hit');floating.push({x:target.position.x,y:target.position.y,text:'+100',life:60});publish()}
     Events.on(engine,'collisionStart',event=>{
       if(phase!=='flying')return;
       for(const pair of event.pairs){
@@ -71,7 +85,7 @@ export default function BirdLaunch(){
     function down(event:PointerEvent){
       if(pausedRef.current||phase!=='ready')return;const p=point(event);
       if(Math.hypot(p.x-bird.position.x,p.y-bird.position.y)>65)return;
-      tone(210,.06);element.focus({preventScroll:true});pointer=event.pointerId;drag=true;element.setPointerCapture(pointer);event.preventDefault();
+      playSound('pull');element.focus({preventScroll:true});pointer=event.pointerId;drag=true;element.setPointerCapture(pointer);event.preventDefault();
     }
     function move(event:PointerEvent){if(pausedRef.current||!drag||event.pointerId!==pointer)return;const next=dragAim(point(event));aim(next.angle,next.power);event.preventDefault()}
     function up(event:PointerEvent){if(!drag||event.pointerId!==pointer)return;move(event);launch();pointer=null}
@@ -85,8 +99,10 @@ export default function BirdLaunch(){
       if(phase==='flying'&&!pausedRef.current&&!document.hidden){
         trail.push({x:bird.position.x,y:bird.position.y});if(trail.length>22)trail.shift();
         for(const target of targets)if(!destroyed.has(target.id)&&(target.position.y>505||target.position.x<0||target.position.x>W))hit(target);
-        if(hits===targets.length){phase='won';tone(1040,.4);setEarnedCoins(progressRef.current.stars[levelIndex]>0?0:level.coins);setProgress(previous=>completeBirdLevel(previous,levelIndex,shots));setShowResult(true);publish()}
-        else if(shotAt>5500||bird.position.x>W+80||bird.position.y>H+80){
+        if(hits===targets.length&&clearedAt===null)clearedAt=shotAt;
+        const flightFinished=shotAt>5500||bird.position.x>W+80||bird.position.y>H+80||(bird.position.y>450&&Math.hypot(bird.velocity.x,bird.velocity.y)<1.5);
+        if(birdRewardReady(clearedAt,shotAt,flightFinished)){phase='won';playSound('win');setEarnedCoins(progressRef.current.stars[levelIndex]>0?0:level.coins);setProgress(previous=>completeBirdLevel(previous,levelIndex,shots));setShowResult(true);publish()}
+        else if(clearedAt===null&&flightFinished){
           if(shots===0){phase='lost';setEarnedCoins(0);setShowResult(true);publish()}
           else{Composite.remove(engine.world,bird);bird=newBird();Composite.add(engine.world,bird);phase='ready';trail.length=0;aim(20,90);publish()}
         }
@@ -148,14 +164,14 @@ export default function BirdLaunch(){
     frame=requestAnimationFrame(draw);
     return()=>{cancelAnimationFrame(frame);control.current=null;element.removeEventListener('keydown',key);element.removeEventListener('pointerdown',down);element.removeEventListener('pointermove',move);element.removeEventListener('pointerup',up);element.removeEventListener('pointercancel',cancel);Events.off(engine,'collisionStart');Composite.clear(engine.world,false);Engine.clear(engine)};
   },[generation,levelIndex]);
-  return <section className="bird-launch panel"><div className="eyebrow">LEVEL {levelIndex+1} / {birdLevels.length} · {level.name}</div><div className="section-heading"><div><h1>Belancer Bird Launch</h1><p>Clear the city flock. Pull back, find your arc, and fly.</p></div><div className="bird-toolbar"><button className="secondary" onClick={()=>{soundEnabled.current=!sound;setSound(!sound);if(!sound)tone(600,.08)}} aria-pressed={sound}>{sound?'♫ Sound on':'♫ Sound off'}</button><button className="secondary" onClick={togglePause} aria-pressed={paused}>{paused?'▶ Resume':'Ⅱ Pause'}</button><button className="secondary" onClick={fullscreen}>⛶ Expand</button><button className="secondary" onClick={()=>{setGeneration(value=>value+1)}}>↻ Restart</button></div></div>
+  return <section className="bird-launch panel"><div className="eyebrow">LEVEL {levelIndex+1} / {birdLevels.length} · {level.name}</div><div className="section-heading"><div><h1>Belancer Bird Launch</h1><p>Clear the city flock. Pull back, find your arc, and fly.</p></div><div className="bird-toolbar"><button className="secondary" onClick={()=>{soundEnabled.current=!sound;setSound(!sound);if(!sound)playSound('toggle')}} aria-pressed={sound}>{sound?'♫ Sound on':'♫ Sound off'}</button><button className="secondary" onClick={togglePause} aria-pressed={paused}>{paused?'▶ Resume':'Ⅱ Pause'}</button><button className="secondary" onClick={fullscreen}>⛶ Expand</button><button className="secondary" onClick={()=>{setGeneration(value=>value+1)}}>↻ Restart</button></div></div>
     <div className="game-top"><strong>{view.shots} / {level.shots} shots remaining</strong><strong>{view.hits} / {level.towers.length} birds cleared</strong><span>🪙 {birdCoins(progress)} coins · {birdPoints(progress)} total points</span></div>
     <div ref={stage} className={`bird-stage ${expanded?'expanded':''}`}>
     {expanded&&<button className="bird-expanded-close secondary" onClick={()=>setExpanded(false)}>Close expanded view ×</button>}
     <canvas tabIndex={0} ref={canvas} width={W} height={H} aria-label="Bird launch playfield. Drag the bird to aim and release to shoot. Use arrow keys to aim, plus or minus to adjust pull, and Space to launch. P to pause."/>
     {paused&&<div className="bird-pause-overlay"><div><span>Ⅱ</span><h2>Take a breath.</h2><p>Your next great shot can wait.</p><button onClick={togglePause}>Resume flight →</button></div></div>}
     </div>
-    <p role="status" className="feedback">{view.phase==='ready'?'Pull back to aim, then release to fly.':view.phase==='flying'?'Bird in flight…':view.phase==='won'?'Great shot! The city flock is cleared.':'Out of shots. Restart and try another angle.'}</p>
+    <p role="status" className="feedback">{view.phase==='ready'?'Pull back to aim, then release to fly.':view.phase==='flying'?(view.hits===level.towers.length?'All birds cleared! Finishing your flight…':'Bird in flight…'):view.phase==='won'?'Great shot! The city flock is cleared.':'Out of shots. Restart and try another angle.'}</p>
     {(view.phase==='won'||view.phase==='lost')&&<button className="secondary" onClick={()=>setShowResult(true)}>View level result →</button>}
     <dialog ref={resultDialog} className="bird-reward-modal" aria-labelledby="bird-result-title" onCancel={()=>setShowResult(false)} onClose={()=>setShowResult(false)}>
       <button className="bird-modal-close secondary" aria-label="Close level result" onClick={()=>setShowResult(false)}>×</button>

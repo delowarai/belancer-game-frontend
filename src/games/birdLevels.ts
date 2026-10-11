@@ -22,3 +22,5 @@ export function birdCoins(progress:BirdProgress){return birdLevels.reduce((sum,l
 export function birdPoints(progress:BirdProgress){return progress.points.reduce((sum,points)=>sum+points,0)}
 // Every step increases mass/impact resistance and reduces the shots per target.
 export function birdDifficulty(index:number){return {density:.002+index*.0004,impact:2.4+index*.15,shield:index<3?0:Math.floor((index-1)/2),theme:Math.floor(index/4)}}
+
+export function birdRewardReady(clearedAt:number|null,flightTime:number,flightFinished:boolean){return clearedAt!==null&&flightTime-clearedAt>=1400&&flightFinished}

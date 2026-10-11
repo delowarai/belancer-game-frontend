@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {birdLevels,readBirdProgress,completeBirdLevel,birdCoins,birdPoints,birdDifficulty} from '../.test-build/birdLevels.js';
+import {birdLevels,readBirdProgress,completeBirdLevel,birdCoins,birdPoints,birdDifficulty,birdRewardReady} from '../.test-build/birdLevels.js';
 test('11 distinct tower layouts have rewards and enough shots',()=>{
   assert.equal(birdLevels.length,11);
   assert.equal(new Set(birdLevels.map(level=>JSON.stringify(level.towers))).size,11);
@@ -44,4 +44,11 @@ test('saved points keep the best result and migrate older star-only saves',()=>{
   progress=completeBirdLevel(progress,0,0);
   assert.equal(birdPoints(progress),300);
   assert.equal(birdCoins(progress),50);
+});
+
+test('reward waits for all targets, the final flight and celebration',()=>{
+  assert.equal(birdRewardReady(null,6000,true),false);
+  assert.equal(birdRewardReady(1000,2399,true),false);
+  assert.equal(birdRewardReady(1000,4000,false),false);
+  assert.equal(birdRewardReady(1000,2400,true),true);
 });
