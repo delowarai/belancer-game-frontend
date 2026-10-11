@@ -4,6 +4,7 @@ type Body=Matter.Body;
 import {boltPoint} from './bolts.js';
 import type {BoltLevel,BoltState} from './bolts.js';
 export type PlankPose={x:number;y:number;angle:number;originX:number;originY:number};
+export type BoltSnapshot={bodies:{id:number;x:number;y:number;angle:number;vx:number;vy:number;angular:number;static:boolean}[];fallen:number[];released:number[];attached:[number,number[]][];hinges:[number,number][]};
 export class BoltPhysics{
  readonly engine=Engine.create();
  readonly planks=new Map<number,Body>();
@@ -44,6 +45,15 @@ export class BoltPhysics{
  if(count>=30){const direction=body.position.x<support.position.x?-1:1;Body.setVelocity(body,{x:direction*.6,y:body.velocity.y});Body.setAngularVelocity(body,direction*.025);this.balancedFrames.set(id,0)}
  if(!this.fallen.has(id)&&Math.min(...body.vertices.map(v=>v.y))>570){this.fallen.add(id);Composite.remove(this.engine.world,body)}}}
  canPlace(hole:number){const p=boltPoint(hole),bodies=[...this.planks.keys()].filter(id=>!this.fallen.has(id)).map(id=>this.planks.get(id)!);return [[0,0],[-18,0],[18,0],[0,-18],[0,18]].every(([x,y])=>Query.point(bodies,{x:p.x+x,y:p.y+y}).length===0)}
+ canSelect(hole:number){const p=boltPoint(hole);for(const plate of [...this.level.plates].reverse()){if(this.fallen.has(plate.id))continue;const body=this.planks.get(plate.id)!;if(Query.point([body],p).length)return (this.attached.get(plate.id)||[]).includes(hole)}return true}
+ pinSupportCount(hole:number){return [...this.attached.values()].filter(holes=>holes.includes(hole)).length}
+ capture():BoltSnapshot{return {bodies:[...this.planks].map(([id,b])=>({id,x:b.position.x,y:b.position.y,angle:b.angle,vx:b.velocity.x,vy:b.velocity.y,angular:b.angularVelocity,static:b.isStatic})),fallen:[...this.fallen],released:[...this.released],attached:[...this.attached].map(([id,holes])=>[id,[...holes]]),hinges:[...this.hinges].map(([id,h])=>[id,h.hole])}}
+ restore(snapshot:BoltSnapshot){
+  for(const {joint} of this.hinges.values())Composite.remove(this.engine.world,joint);this.hinges.clear();
+  for(const pose of snapshot.bodies){const body=this.planks.get(pose.id)!;if(this.fallen.has(pose.id)&&!snapshot.fallen.includes(pose.id))Composite.add(this.engine.world,body);if(!this.fallen.has(pose.id)&&snapshot.fallen.includes(pose.id))Composite.remove(this.engine.world,body);Body.setStatic(body,false);Body.setPosition(body,{x:pose.x,y:pose.y});Body.setAngle(body,pose.angle);Body.setVelocity(body,{x:pose.vx,y:pose.vy});Body.setAngularVelocity(body,pose.angular);Body.setStatic(body,pose.static)}
+  this.fallen.clear();for(const id of snapshot.fallen)this.fallen.add(id);this.released=new Set(snapshot.released);this.attached=new Map(snapshot.attached.map(([id,holes])=>[id,[...holes]]));this.balancedFrames.clear();
+  for(const [id,hole] of snapshot.hinges){const body=this.planks.get(id)!,origin=this.origins.get(id)!,p=boltPoint(hole),x=p.x-origin.x,y=p.y-origin.y,c=Math.cos(body.angle),s=Math.sin(body.angle);const joint=Constraint.create({pointA:p,bodyB:body,pointB:{x:c*x-s*y,y:s*x+c*y},length:0,stiffness:.9,damping:.01});this.hinges.set(id,{hole,joint});Composite.add(this.engine.world,joint)}Engine.clear(this.engine);
+ }
  blockingPins(){const caught:number[]=[];for(const pair of this.engine.pairs.list){if(!pair.isActive)continue;for(const [hole,pin] of this.pins){const other=pair.bodyA===pin?pair.bodyB:pair.bodyB===pin?pair.bodyA:null;if(other&&[...this.released].some(id=>this.planks.get(id)===other.parent))caught.push(hole)}}return [...new Set(caught)]}
  poses(){return [...this.planks].map(([id,body])=>{const origin=this.origins.get(id)!;return [id,{x:body.position.x,y:body.position.y,angle:body.angle,originX:origin.x,originY:origin.y}] as const})}
  dispose(){Events.off(this.engine,'collisionStart');Events.off(this.engine,'collisionActive');Composite.clear(this.engine.world,false);Engine.clear(this.engine)}

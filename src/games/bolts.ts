@@ -13,9 +13,9 @@ export function initialBolts(level:BoltLevel):BoltState{return {occupied:[...new
 export function activePlates(level:BoltLevel,state:BoltState){return level.plates.filter(p=>!state.removed.includes(p.id))}
 function onPlate(hole:number,plate:BoltPlate){const point=boltPoint(hole);for(let i=1;i<plate.holes.length;i++){const a=boltPoint(plate.holes[i-1]),b=boltPoint(plate.holes[i]),dx=b.x-a.x,dy=b.y-a.y,t=Math.max(0,Math.min(1,((point.x-a.x)*dx+(point.y-a.y)*dy)/(dx*dx+dy*dy)));if(Math.hypot(point.x-a.x-t*dx,point.y-a.y-t*dy)<27)return true}return false}
 export function boltExposed(level:BoltLevel,state:BoltState,hole:number){const covering=activePlates(level,state).filter(p=>onPlate(hole,p));return !covering.length||covering[covering.length-1].holes.includes(hole)}
-export function boltDestination(level:BoltLevel,state:BoltState,hole:number,physicalClear?:boolean){return hole>=0&&hole<16+level.parking&&(hole>=16||level.plates.some(p=>p.holes.includes(hole)))&&!state.occupied.includes(hole)&&(physicalClear??!activePlates(level,state).some(p=>onPlate(hole,p)))}
-export function moveBolt(level:BoltLevel,state:BoltState,from:number,to:number,physicalClear?:boolean):BoltState|null{
-  if(!state.occupied.includes(from)||!boltExposed(level,state,from)||!boltDestination(level,state,to,physicalClear))return null;
+export function boltDestination(level:BoltLevel,state:BoltState,hole:number,physicalClear?:boolean){return hole>=0&&hole<16+level.parking&&!state.occupied.includes(hole)&&(physicalClear??!activePlates(level,state).some(p=>onPlate(hole,p)))}
+export function moveBolt(level:BoltLevel,state:BoltState,from:number,to:number,physicalClear?:boolean,physicalExposed?:boolean):BoltState|null{
+  if(!state.occupied.includes(from)||!(physicalExposed??boltExposed(level,state,from))||!boltDestination(level,state,to,physicalClear))return null;
   const occupied=state.occupied.filter(h=>h!==from).concat(to),removed=[...state.removed];
   for(const plate of activePlates(level,state))if(!plate.holes.some(h=>occupied.includes(h)))removed.push(plate.id);
   return {occupied,removed,moves:state.moves+1};

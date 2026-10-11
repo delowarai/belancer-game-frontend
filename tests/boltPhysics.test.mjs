@@ -36,3 +36,8 @@ test('unlocked wood has controlled fall and rotation speeds',()=>{
  for(let i=0;i<200;i++){world.step();const body=world.planks.get(0);assert.ok(Math.hypot(body.velocity.x,body.velocity.y)<=2.201);assert.ok(Math.abs(body.angularVelocity)<=.01801)}
  world.sync({occupied:[],removed:[0],moves:2});for(let i=0;i<600;i++){world.step();assert.ok(Math.hypot(world.planks.get(0).velocity.x,world.planks.get(0).velocity.y)<=2.201)}assert.equal(world.fallen.size,1);world.dispose();
 });
+test('Undo restores the exact swinging pose and velocity, including its hinge',()=>{
+ const world=new BoltPhysics(level);world.sync({occupied:[0,1],removed:[],moves:0});world.sync({occupied:[0,16],removed:[],moves:1});for(let i=0;i<70;i++)world.step();const snapshot=world.capture();
+ world.sync({occupied:[16,17],removed:[0],moves:2});for(let i=0;i<400;i++)world.step();world.sync({occupied:[0,16],removed:[],moves:1});world.restore(snapshot);
+ assert.deepEqual(world.capture(),snapshot);for(let i=0;i<600;i++)world.step();assert.equal(world.fallen.size,0);assert.ok(world.planks.get(0).position.y>105);world.dispose();
+});
