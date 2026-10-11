@@ -81,7 +81,7 @@ function questionFor(slug:string,round:number):Question{
     return {prompt:`Choose a word closest in meaning to "${item.word}".`,options:item.options,answer};
   }
   if(slug==='letter-order'){
-    const index=2+Math.floor(Math.random()*22),answer=letters[index],options=shuffle([answer,letters[(index+1)%26],letters[(index+2)%26],letters[(index+3)%26]]);
+    const index=2+Math.floor(Math.random()*22),answer=letters[index+1],options=shuffle([answer,letters[index],letters[index+2],letters[index-1]]);
     return {prompt:`What letter comes next after ${letters[index-2]}, ${letters[index-1]}, ${letters[index]}?`,options,answer:options.indexOf(answer)};
   }
   if(slug==='number-bonds'){
