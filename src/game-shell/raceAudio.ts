@@ -17,11 +17,11 @@ export class RaceAudio {
   this.source=c.createBufferSource();this.source.buffer=this.noise;this.source.loop=true;const roadFilter=c.createBiquadFilter();roadFilter.type='lowpass';roadFilter.frequency.value=650;this.road.gain.value=0;this.source.connect(roadFilter);roadFilter.connect(this.road);this.road.connect(this.master);this.source.start();
  }
  async resume(){await this.context.resume()}
- volume(enabled:boolean,volume:number){this.master.gain.setTargetAtTime(enabled?volume*.7:0,this.context.currentTime,.04);if(!enabled)this.stopEffects()}
+ volume(enabled:boolean,volume:number){this.master.gain.setTargetAtTime(enabled?Math.max(0,Math.min(1,volume)):0,this.context.currentTime,.04);if(!enabled)this.stopEffects()}
  update(speed:number,accelerate:boolean,brake:boolean,running:boolean){
   const time=this.context.currentTime,ratio=Math.min(1,speed/55),gear=Math.max(0,Math.min(4,Math.floor(speed/11))),rpm=48+(speed-gear*11)*4+(accelerate?12:0);
   this.oscillators.forEach((osc,i)=>osc.frequency.setTargetAtTime(rpm*[1,2,3][i],time,.12));this.filter.frequency.setTargetAtTime(260+ratio*600,time,.18);
-  this.engine.gain.setTargetAtTime(running?.12+ratio*.1:0,time,.08);this.road.gain.setTargetAtTime(running?ratio*(brake?.09:.028):0,time,.1);
+  this.engine.gain.setTargetAtTime(running?.2+ratio*.16:0,time,.08);this.road.gain.setTargetAtTime(running?ratio*(brake?.09:.028):0,time,.1);
  }
  private tone(frequency:number,delay:number,duration:number,level=.15){const c=this.context,osc=c.createOscillator(),gain=c.createGain(),time=c.currentTime+delay;osc.type='sine';osc.frequency.value=frequency;gain.gain.setValueAtTime(0,time);gain.gain.linearRampToValueAtTime(level,time+.012);gain.gain.exponentialRampToValueAtTime(.001,time+duration);osc.connect(gain);gain.connect(this.master);osc.start(time);osc.stop(time+duration);this.effects.add(osc);osc.onended=()=>{this.effects.delete(osc);gain.disconnect();osc.disconnect()}}
  countdown(go:boolean){this.tone(go?880:440,0,go?.35:.12)}
