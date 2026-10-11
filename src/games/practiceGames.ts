@@ -2,7 +2,7 @@ export const categoryColors=['#1F7A70','#9ED8CF','#C2532D','#D2F53C'];
 
 export const additionalPracticeGames=[
   {slug:'mini-sudoku',name:'Mini Sudoku',category:'Math',icon:'▦',description:'Sudoku for a coffee break. Unique puzzles from 4×4 to 12×12 with notes and hints.',color:'var(--game-memory-bg)',ink:'var(--game-memory-fg)'},
-  {slug:'bird-launch',name:'Belancer Bird Launch',category:'Problem Solving',icon:'➶',description:'Pull, aim and launch your bird to topple towers and clear three targets.',color:'var(--game-memory-bg)',ink:'var(--game-memory-fg)'},
+  {slug:'bird-launch',name:'Belancer Bird Launch',category:'Problem Solving',icon:'➶',description:'Launch through 11 city districts, topple towers and collect stars and coins.',color:'var(--game-memory-bg)',ink:'var(--game-memory-fg)'},
   {slug:'number-recall',name:'Number Recall',category:'Memory',icon:'123',description:'Remember a short number sequence, then enter it in order.',color:'var(--game-memory-bg)',ink:'var(--game-memory-fg)'},
   {slug:'quick-count',name:'Quick Count',category:'Speed',icon:'#',description:'Count the matching symbols before moving to the next quick round.',color:'var(--game-speed-bg)',ink:'var(--game-speed-fg)'},
   {slug:'rapid-sums',name:'Rapid Sums',category:'Speed',icon:'+',description:'Solve short addition and subtraction questions as quickly as you can.',color:'var(--game-math-bg)',ink:'var(--game-math-fg)'},
