@@ -12,13 +12,13 @@ export const raceLevels=Array.from({length:12},(_,i)=>({
  rivalSpeed:30+i*.95,traffic:8+i*2,reward:180+i*35,
 }));
 export type RaceProgress={coins:number;car:number;owned:number[];paint:number;upgrades:number[];stars:number[];challengeStars:number[];races:number;distance:number;overtakes:number;maxSpeed:number;xp:number;bestEndless:number;settings:RaceSettings};
-export const freshRaceProgress=():RaceProgress=>({coins:500,car:0,owned:[0],paint:0,upgrades:[0,0,0],stars:Array(12).fill(0),challengeStars:Array(12).fill(0),races:0,distance:0,overtakes:0,maxSpeed:0,xp:0,bestEndless:0,settings:{auto:true,sound:false,volume:.35,units:'km'}});
+export const freshRaceProgress=():RaceProgress=>({coins:500,car:0,owned:[0],paint:0,upgrades:[0,0,0],stars:Array(12).fill(0),challengeStars:Array(12).fill(0),races:0,distance:0,overtakes:0,maxSpeed:0,xp:0,bestEndless:0,settings:{auto:true,sound:true,volume:.5,units:'km'}});
 const finite=(v:unknown,max=1e8)=>typeof v==='number'&&Number.isFinite(v)?Math.max(0,Math.min(max,v)):0;
 export function readRaceProgress(raw:string|null):RaceProgress{
  const base=freshRaceProgress();try{const p=JSON.parse(raw||'null');if(!p||typeof p!=='object'||Array.isArray(p))return base;
  const stars=(v:unknown)=>Array.from({length:12},(_,i)=>Array.isArray(v)?Math.floor(finite(v[i],3)):0);
  const owned=Array.isArray(p.owned)?[...new Set([0,...p.owned.filter((i:unknown)=>Number.isInteger(i)&&Number(i)>=0&&Number(i)<3)])] as number[]:[0];
- return {...base,coins:finite(p.coins),owned,car:owned.includes(p.car)?p.car:0,paint:Math.floor(finite(p.paint,4)),upgrades:Array.from({length:3},(_,i)=>Array.isArray(p.upgrades)?Math.floor(finite(p.upgrades[i],4)):0),stars:stars(p.stars),challengeStars:stars(p.challengeStars),races:Math.floor(finite(p.races)),distance:finite(p.distance),overtakes:Math.floor(finite(p.overtakes)),maxSpeed:finite(p.maxSpeed,300),xp:finite(p.xp),bestEndless:finite(p.bestEndless),settings:{auto:p.settings?.auto!==false,sound:p.settings?.sound===true,volume:typeof p.settings?.volume==='number'?finite(p.settings.volume,1):.35,units:p.settings?.units==='mi'?'mi':'km'}};
+ return {...base,coins:finite(p.coins),owned,car:owned.includes(p.car)?p.car:0,paint:Math.floor(finite(p.paint,4)),upgrades:Array.from({length:3},(_,i)=>Array.isArray(p.upgrades)?Math.floor(finite(p.upgrades[i],4)):0),stars:stars(p.stars),challengeStars:stars(p.challengeStars),races:Math.floor(finite(p.races)),distance:finite(p.distance),overtakes:Math.floor(finite(p.overtakes)),maxSpeed:finite(p.maxSpeed,300),xp:finite(p.xp),bestEndless:finite(p.bestEndless),settings:{auto:p.settings?.auto!==false,sound:p.settings?.sound!==false,volume:typeof p.settings?.volume==='number'?finite(p.settings.volume,1):.35,units:p.settings?.units==='mi'?'mi':'km'}};
  }catch{return base}
 }
 export function carStats(p:RaceProgress){const car=raceCars[p.car];return {...car,speed:car.speed+p.upgrades[0]*1.8,handling:car.handling+p.upgrades[1]*.35,brake:car.brake+p.upgrades[2]*2}}
