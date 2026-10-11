@@ -31,3 +31,8 @@ test('loose upright wood slowly tips off one parking screw',()=>{
  world.sync({occupied:[16],removed:[0],moves:1});for(let i=0;i<120;i++)world.step();assert.equal(world.fallen.size,0);
  for(let i=0;i<1500;i++)world.step();assert.equal(world.fallen.size,1);world.dispose();
 });
+test('unlocked wood has controlled fall and rotation speeds',()=>{
+ const world=new BoltPhysics(level);world.sync({occupied:[0],removed:[],moves:1});
+ for(let i=0;i<200;i++){world.step();const body=world.planks.get(0);assert.ok(Math.hypot(body.velocity.x,body.velocity.y)<=2.201);assert.ok(Math.abs(body.angularVelocity)<=.01801)}
+ world.sync({occupied:[],removed:[0],moves:2});for(let i=0;i<600;i++){world.step();assert.ok(Math.hypot(world.planks.get(0).velocity.x,world.planks.get(0).velocity.y)<=2.201)}assert.equal(world.fallen.size,1);world.dispose();
+});
