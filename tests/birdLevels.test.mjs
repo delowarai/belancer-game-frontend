@@ -1,12 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {birdLevels,readBirdProgress,completeBirdLevel,birdCoins,birdPoints,birdDifficulty,birdRewardReady,birdShieldPositions,birdPhysicsActive} from '../.test-build/birdLevels.js';
-test('11 distinct tower layouts have rewards and enough shots',()=>{
-  assert.equal(birdLevels.length,11);
-  assert.equal(new Set(birdLevels.map(level=>JSON.stringify(level.towers))).size,11);
+test('30 distinct tower layouts have rewards and enough shots',()=>{
+  assert.equal(birdLevels.length,30);
+  assert.equal(new Set(birdLevels.map(level=>JSON.stringify(level.towers))).size,30);
   for(const level of birdLevels){
     assert.ok(level.coins>0&&level.badge&&level.shots>=level.towers.length);
-    for(const [x,height] of level.towers)assert.ok(x>400&&x<950&&height>=70&&height<=220);
+    for(const [x,height] of level.towers)assert.ok(x>400&&x<950&&height>=70&&height<=260);
   }
 });
 test('replays improve stars without farming additional coins',()=>{
@@ -69,4 +69,17 @@ test('steel barriers never overlap tower supports or roofs',()=>{
     });
     for(let i=1;i<positions.length;i++)assert.ok(positions[i]-positions[i-1]>20);
   });
+});
+
+test('30 levels have safe themes and Easy to Medium to Hard chapters',()=>{
+  assert.deepEqual([0,4,5,14,15,29].map(i=>birdDifficulty(i).tier),['Easy','Easy','Medium','Medium','Hard','Hard']);
+  birdLevels.forEach((_,index)=>assert.ok(birdDifficulty(index).theme>=0&&birdDifficulty(index).theme<=2));
+});
+test('existing 11-level saves keep progress and unlock the extension',()=>{
+  const saved=readBirdProgress(JSON.stringify({stars:Array(11).fill(3),points:Array(11).fill(500)}));
+  assert.equal(saved.stars.length,30);
+  assert.equal(saved.stars[10],3);
+  assert.equal(saved.stars[11],0);
+  assert.equal(saved.points[10],500);
+  assert.equal(saved.points[11],0);
 });
