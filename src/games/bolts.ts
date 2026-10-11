@@ -9,11 +9,12 @@ export const boltLevels:BoltLevel[]=Array.from({length:20},(_,index)=>{
   for(let i=0;i<count;i++){const holes=path.slice(i,i+(hard&&i%3===0?3:2));plates.push({id:i,holes,color:['#45acc5','#d45873','#dda13b','#8b79c7'][i%4]})}
   return {name:['Workshop','Copper Lane','Blue Foundry','Sunset Works'][index%4]+' '+(index+1),tier:index<6?'Easy':index<12?'Medium':'Hard',plates,parking:hard?3:2,coins:30+index*10};
 });
+export function boltHoles(level:BoltLevel){const used=[...new Set(level.plates.flatMap(p=>p.holes))];return [...used,...(level.plates.length>=8?Array.from({length:16},(_,i)=>i).filter(h=>!used.includes(h)).slice(0,level.plates.length>=12?3:2):[]),...Array.from({length:level.parking},(_,i)=>16+i)]}
 export function initialBolts(level:BoltLevel):BoltState{return {occupied:[...new Set(level.plates.flatMap(p=>p.holes))],removed:[],moves:0}}
 export function activePlates(level:BoltLevel,state:BoltState){return level.plates.filter(p=>!state.removed.includes(p.id))}
 function onPlate(hole:number,plate:BoltPlate){const point=boltPoint(hole);for(let i=1;i<plate.holes.length;i++){const a=boltPoint(plate.holes[i-1]),b=boltPoint(plate.holes[i]),dx=b.x-a.x,dy=b.y-a.y,t=Math.max(0,Math.min(1,((point.x-a.x)*dx+(point.y-a.y)*dy)/(dx*dx+dy*dy)));if(Math.hypot(point.x-a.x-t*dx,point.y-a.y-t*dy)<27)return true}return false}
 export function boltExposed(level:BoltLevel,state:BoltState,hole:number){const covering=activePlates(level,state).filter(p=>onPlate(hole,p));return !covering.length||covering[covering.length-1].holes.includes(hole)}
-export function boltDestination(level:BoltLevel,state:BoltState,hole:number,physicalClear?:boolean){return hole>=0&&hole<16+level.parking&&!state.occupied.includes(hole)&&(physicalClear??!activePlates(level,state).some(p=>onPlate(hole,p)))}
+export function boltDestination(level:BoltLevel,state:BoltState,hole:number,physicalClear?:boolean){return hole>=0&&hole<16+level.parking&&boltHoles(level).includes(hole)&&!state.occupied.includes(hole)&&(physicalClear??!activePlates(level,state).some(p=>onPlate(hole,p)))}
 export function moveBolt(level:BoltLevel,state:BoltState,from:number,to:number,physicalClear?:boolean,physicalExposed?:boolean):BoltState|null{
   if(!state.occupied.includes(from)||!(physicalExposed??boltExposed(level,state,from))||!boltDestination(level,state,to,physicalClear))return null;
   const occupied=state.occupied.filter(h=>h!==from).concat(to),removed=[...state.removed];
