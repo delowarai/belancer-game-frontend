@@ -3,3 +3,4 @@
 .nuts-board{background:#d9ad76}
 .nuts-parking-label{fill:#654729;text-shadow:0 1px #f4dcaf;font-size:9px}
 .nuts-workshop{max-width:520px}.nuts-board{max-height:none;height:auto;aspect-ratio:450/550}
+.nuts-plate.nuts-physical{transition:none;pointer-events:none}
