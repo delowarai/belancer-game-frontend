@@ -342,3 +342,4 @@ header .account{gap:16px;min-width:0}
 .cell.matched{color:var(--color-deep)}
 @media(min-width:681px) and (max-width:900px){.header-inner{grid-template-columns:1fr auto;padding-top:16px;padding-bottom:16px;gap:15px}header nav{grid-column:1/-1;grid-row:2;width:100%;justify-content:space-between}}
 @media(max-width:420px){.header-inner{gap:8px}header .brand-logo{width:80px}header .account{gap:6px}header .account-profile span:last-child{display:none}header .account .small{padding:8px 10px}}
+.catalog-more{display:flex;justify-content:center;margin-top:24px}.catalog-more button{min-width:180px}
