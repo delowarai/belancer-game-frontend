@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {makeSudoku,countSolutions,conflicts,sudokuHint} from '../.test-build/sudoku.js';
 test('all supported sizes and difficulties have one valid solution',()=>{
-  for(const size of [6,8,10])for(const difficulty of ['Easy','Medium','Hard']){
+  for(const size of [4,6,8,9,10,12])for(const difficulty of ['Easy','Medium','Hard']){
     const puzzle=makeSudoku(size,difficulty,275);
     assert.equal(countSolutions(puzzle.givens,size),1);
     assert.ok(puzzle.givens.some(value=>!value));
@@ -37,4 +37,8 @@ test('hints guide correction of a wrong entry before another deduction',()=>{
   const hint=sudokuHint(puzzle,board,index);
   assert.equal(hint.index,index);assert.equal(hint.value,puzzle.solution[index]);
   assert.match(hint.reason,/Replace it/);
+});
+
+test('square and larger rectangular boxes detect duplicates correctly',()=>{
+  for(const [size,index] of [[9,10],[12,15]]){const board=Array(size*size).fill(0);board[0]=1;assert.ok(conflicts(board,size,index,1));}
 });
