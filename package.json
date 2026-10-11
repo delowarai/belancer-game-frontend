@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite --host 127.0.0.1 --port 5173 --strictPort",
     "build": "tsc -b && vite build",
-    "test": "tsc src/games/engine.ts src/games/practiceGames.ts src/games/birdAim.ts src/games/birdLevels.ts src/games/sudoku.ts src/games/bolts.ts src/games/boltPhysics.ts --target ES2022 --module ES2022 --esModuleInterop --skipLibCheck --outDir .test-build && node --test tests/engine.test.mjs tests/birdAim.test.mjs tests/birdLevels.test.mjs tests/sudoku.test.mjs tests/bolts.test.mjs tests/boltPhysics.test.mjs tests/boltCampaign.test.mjs",
+    "test": "tsc src/games/engine.ts src/games/practiceGames.ts src/games/birdAim.ts src/games/birdLevels.ts src/games/sudoku.ts src/games/bolts.ts src/games/boltPhysics.ts src/games/racing.ts --target ES2022 --module ES2022 --esModuleInterop --skipLibCheck --outDir .test-build && node --test tests/engine.test.mjs tests/birdAim.test.mjs tests/birdLevels.test.mjs tests/sudoku.test.mjs tests/bolts.test.mjs tests/boltPhysics.test.mjs tests/boltCampaign.test.mjs tests/racing.test.mjs",
     "preview": "vite preview --host 127.0.0.1"
   },
   "private": true,
@@ -18,13 +18,15 @@
     "@fontsource-variable/manrope": "5.3.0",
     "matter-js": "^0.20.0",
     "react": "19.0.0",
-    "react-dom": "19.0.0"
+    "react-dom": "19.0.0",
+    "three": "^0.186.1"
   },
   "devDependencies": {
     "@tailwindcss/vite": "4.1.3",
     "@types/matter-js": "^0.20.2",
     "@types/react": "19.0.10",
     "@types/react-dom": "19.0.4",
+    "@types/three": "^0.186.0",
     "@vitejs/plugin-react": "4.3.4",
     "tailwindcss": "4.1.3",
     "typescript": "5.7.3",

@@ -22,4 +22,5 @@ export const additionalPracticeGames=[
   {slug:'number-bonds',name:'Number Bonds',category:'Math',icon:'10',description:'Find the missing number that completes the total.',color:'var(--game-math-bg)',ink:'var(--game-math-fg)'},
   {slug:'greater-number',name:'Greater Number',category:'Math',icon:'>',description:'Compare two numbers and pick the larger one.',color:'var(--game-pairs-bg)',ink:'var(--game-pairs-fg)'},
   {slug:'math-patterns',name:'Math Patterns',category:'Math',icon:'∑',description:'Spot the number pattern and work out the next step.',color:'var(--game-speed-bg)',ink:'var(--game-speed-fg)'},
+  {slug:'highway-rush',name:'Belancer Highway Rush',category:'Speed',icon:'⚑',description:'Race four AI rivals across 12 districts, unlock cars and earn your place on the podium.',color:'var(--game-memory-bg)',ink:'var(--game-memory-fg)'},
 ].map(game=>({...game,practiceOnly:true}));
