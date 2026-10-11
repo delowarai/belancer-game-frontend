@@ -24,3 +24,6 @@ export function birdPoints(progress:BirdProgress){return progress.points.reduce(
 export function birdDifficulty(index:number){return {density:.002+index*.0004,impact:2.4+index*.15,shield:index<3?0:Math.floor((index-1)/2),theme:Math.floor(index/4)}}
 
 export function birdRewardReady(clearedAt:number|null,flightTime:number,flightFinished:boolean){return clearedAt!==null&&flightTime-clearedAt>=1400&&flightFinished}
+
+export function birdShieldPositions(index:number){const count=birdDifficulty(index).shield,firstTower=birdLevels[index].towers[0][0];return Array.from({length:count},(_,i)=>firstTower-80-(count-1-i)*28)}
+export function birdPhysicsActive(shotsRemaining:number,initialShots:number){return shotsRemaining<initialShots}

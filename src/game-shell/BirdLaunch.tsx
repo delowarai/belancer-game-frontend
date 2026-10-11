@@ -1,7 +1,7 @@
 import {useEffect,useRef,useState} from 'react';
 import {Bodies,Body,Composite,Engine,Events} from 'matter-js';
 import './BirdLaunch.css';
-import {birdLevels,readBirdProgress,completeBirdLevel,birdCoins,birdPoints,birdDifficulty,birdRewardReady} from '../games/birdLevels';
+import {birdLevels,readBirdProgress,completeBirdLevel,birdCoins,birdPoints,birdDifficulty,birdRewardReady,birdShieldPositions,birdPhysicsActive} from '../games/birdLevels';
 import {aimPosition,dragAim,trajectory,BIRD_SPEED,BIRD_AIR,BIRD_GRAVITY} from '../games/birdAim';
 
 const W=1000,H=540,anchor={x:180,y:365};
@@ -51,7 +51,7 @@ export default function BirdLaunch(){
       wood.push(Bodies.rectangle(x-29,480-height/2,16,height,{label:'wood',density:difficulty.density,friction:.8}),Bodies.rectangle(x+29,480-height/2,16,height,{label:'wood',density:difficulty.density,friction:.8}),Bodies.rectangle(x,472-height,90,16,{label:'wood',density:difficulty.density,friction:.8}));
       targets.push(Bodies.circle(x,446-height,18,{label:'target',density:.001,friction:.6,restitution:.25}));
     }
-    for(let i=0;i<difficulty.shield;i++)wood.push(Bodies.rectangle(375+i*62,480-(75+levelIndex*6)/2,20,75+levelIndex*6,{isStatic:true,label:'shield'}));
+    for(const x of birdShieldPositions(levelIndex))wood.push(Bodies.rectangle(x,480-(75+levelIndex*6)/2,20,75+levelIndex*6,{isStatic:true,label:'shield'}));
     function newBird(){const body=Bodies.circle(anchor.x,anchor.y,23,{label:'bird',frictionAir:BIRD_AIR,restitution:.35,density:.004,friction:.4});Body.setStatic(body,true);return body}
     let bird=newBird();
     Composite.add(engine.world,[ground,...wood,...targets,bird]);
@@ -94,7 +94,7 @@ export default function BirdLaunch(){
     function circle(x:number,y:number,r:number,color:string){ctx.fillStyle=color;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill()}
     function draw(now:number){
       if(!pausedRef.current&&!document.hidden)accumulator+=Math.min(now-last,50);last=now;
-      while(accumulator>=1000/60){Engine.update(engine,1000/60);if(phase==='flying')shotAt+=1000/60;accumulator-=1000/60}
+      while(accumulator>=1000/60){if(birdPhysicsActive(shots,level.shots))Engine.update(engine,1000/60);if(phase==='flying')shotAt+=1000/60;accumulator-=1000/60}
       for(const target of queued)Composite.remove(engine.world,target);queued.clear();
       if(phase==='flying'&&!pausedRef.current&&!document.hidden){
         trail.push({x:bird.position.x,y:bird.position.y});if(trail.length>22)trail.shift();

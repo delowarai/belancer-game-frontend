@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {birdLevels,readBirdProgress,completeBirdLevel,birdCoins,birdPoints,birdDifficulty,birdRewardReady} from '../.test-build/birdLevels.js';
+import {birdLevels,readBirdProgress,completeBirdLevel,birdCoins,birdPoints,birdDifficulty,birdRewardReady,birdShieldPositions,birdPhysicsActive} from '../.test-build/birdLevels.js';
 test('11 distinct tower layouts have rewards and enough shots',()=>{
   assert.equal(birdLevels.length,11);
   assert.equal(new Set(birdLevels.map(level=>JSON.stringify(level.towers))).size,11);
@@ -51,4 +51,22 @@ test('reward waits for all targets, the final flight and celebration',()=>{
   assert.equal(birdRewardReady(1000,2399,true),false);
   assert.equal(birdRewardReady(1000,4000,false),false);
   assert.equal(birdRewardReady(1000,2400,true),true);
+});
+
+test('initial scene stays frozen until the first launch',()=>{
+  for(const level of birdLevels){
+    assert.equal(birdPhysicsActive(level.shots,level.shots),false);
+    assert.equal(birdPhysicsActive(level.shots-1,level.shots),true);
+  }
+});
+test('steel barriers never overlap tower supports or roofs',()=>{
+  birdLevels.forEach((level,index)=>{
+    const positions=birdShieldPositions(index);
+    assert.equal(positions.length,birdDifficulty(index).shield);
+    positions.forEach(x=>{
+      assert.ok(x>230);
+      level.towers.forEach(([tower])=>assert.ok(Math.abs(tower-x)>55));
+    });
+    for(let i=1;i<positions.length;i++)assert.ok(positions[i]-positions[i-1]>20);
+  });
 });
