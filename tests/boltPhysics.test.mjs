@@ -26,3 +26,8 @@ test('a vacated hole is reusable without attaching it to wood that has swung awa
  assert.equal(world.canPlace(1),true);world.sync({occupied:[0,1],removed:[],moves:2});for(let i=0;i<120;i++)world.step();assert.ok(world.planks.get(0).position.y>105);
  world.sync({occupied:[1,17],removed:[],moves:3});for(let i=0;i<600;i++)world.step();assert.equal(world.fallen.size,1);world.dispose();
 });
+test('loose upright wood slowly tips off one parking screw',()=>{
+ const upright={...level,plates:[{id:0,holes:[1,5],color:'#a86'}]},world=new BoltPhysics(upright);
+ world.sync({occupied:[16],removed:[0],moves:1});for(let i=0;i<120;i++)world.step();assert.equal(world.fallen.size,0);
+ for(let i=0;i<1500;i++)world.step();assert.equal(world.fallen.size,1);world.dispose();
+});

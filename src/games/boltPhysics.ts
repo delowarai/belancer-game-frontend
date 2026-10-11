@@ -14,6 +14,7 @@ export class BoltPhysics{
  private hinges=new Map<number,{hole:number;joint:Matter.Constraint}>();
  private attached=new Map<number,number[]>();
  private lastMove=0;
+ private balancedFrames=new Map<number,number>();
  private filterContacts:(pairs:Matter.Pair[])=>void=()=>{};
  constructor(readonly level:BoltLevel){
   this.engine.gravity.y=.22;
@@ -24,7 +25,7 @@ export class BoltPhysics{
  }
  sync(state:BoltState){
   // Undo restores the initial physical poses rather than reviving a moved plank.
-  if(state.moves<this.lastMove){for(const [id,body] of this.planks){if(this.fallen.has(id))Composite.add(this.engine.world,body);Body.setPosition(body,this.origins.get(id)!);Body.setAngle(body,0);Body.setVelocity(body,{x:0,y:0});Body.setAngularVelocity(body,0);Body.setStatic(body,true)}for(const {joint} of this.hinges.values())Composite.remove(this.engine.world,joint);this.hinges.clear();this.fallen.clear();this.released.clear()}
+  if(state.moves<this.lastMove){for(const [id,body] of this.planks){if(this.fallen.has(id))Composite.add(this.engine.world,body);Body.setPosition(body,this.origins.get(id)!);Body.setAngle(body,0);Body.setVelocity(body,{x:0,y:0});Body.setAngularVelocity(body,0);Body.setStatic(body,true)}for(const {joint} of this.hinges.values())Composite.remove(this.engine.world,joint);this.hinges.clear();this.fallen.clear();this.released.clear();this.balancedFrames.clear()}
   this.lastMove=state.moves;
   for(const [hole,pin] of this.pins)if(!state.occupied.includes(hole)){Composite.remove(this.engine.world,pin);this.pins.delete(hole)}
   for(const hole of state.occupied)if(!this.pins.has(hole)){const p=boltPoint(hole),pin=Bodies.circle(p.x,p.y,17,{isStatic:true,friction:.7,restitution:.025});this.pins.set(hole,pin);Composite.add(this.engine.world,pin)}
@@ -34,7 +35,13 @@ export class BoltPhysics{
    if(!holes.length&&!this.released.has(plate.id)){if(body.isStatic)Body.setStatic(body,false);this.released.add(plate.id)}
   }
  }
- step(){this.filterContacts(this.engine.pairs.list);Engine.update(this.engine,1000/60);for(const id of this.released){const body=this.planks.get(id)!;if(!this.fallen.has(id)&&Math.min(...body.vertices.map(v=>v.y))>570){this.fallen.add(id);Composite.remove(this.engine.world,body)}}}
+ step(){this.filterContacts(this.engine.pairs.list);Engine.update(this.engine,1000/60);for(const id of this.released){const body=this.planks.get(id)!;
+ // A loose plank cannot remain perfectly balanced on one rounded screw.
+ const contacts=new Set<Body>();for(const pair of this.engine.pairs.list){if(!pair.isActive||pair.isSensor)continue;const a=pair.bodyA.parent,b=pair.bodyB.parent;if(a===body)contacts.add(b);else if(b===body)contacts.add(a)}
+ const support=[...contacts][0],singlePin=contacts.size===1&&[...this.pins.values()].includes(support)&&support.position.y>body.position.y;
+ const resting=singlePin&&body.speed<.25&&Math.abs(body.angularVelocity)<.01,count=resting?(this.balancedFrames.get(id)||0)+1:0;this.balancedFrames.set(id,count);
+ if(count>=30){const direction=body.position.x<support.position.x?-1:1;Body.setVelocity(body,{x:direction*.6,y:body.velocity.y});Body.setAngularVelocity(body,direction*.025);this.balancedFrames.set(id,0)}
+ if(!this.fallen.has(id)&&Math.min(...body.vertices.map(v=>v.y))>570){this.fallen.add(id);Composite.remove(this.engine.world,body)}}}
  canPlace(hole:number){const p=boltPoint(hole),bodies=[...this.planks.keys()].filter(id=>!this.fallen.has(id)).map(id=>this.planks.get(id)!);return [[0,0],[-18,0],[18,0],[0,-18],[0,18]].every(([x,y])=>Query.point(bodies,{x:p.x+x,y:p.y+y}).length===0)}
  blockingPins(){const caught:number[]=[];for(const pair of this.engine.pairs.list){if(!pair.isActive)continue;for(const [hole,pin] of this.pins){const other=pair.bodyA===pin?pair.bodyB:pair.bodyB===pin?pair.bodyA:null;if(other&&[...this.released].some(id=>this.planks.get(id)===other.parent))caught.push(hole)}}return [...new Set(caught)]}
  poses(){return [...this.planks].map(([id,body])=>{const origin=this.origins.get(id)!;return [id,{x:body.position.x,y:body.position.y,angle:body.angle,originX:origin.x,originY:origin.y}] as const})}
