@@ -1,3 +1,4 @@
+import GameCover from '../components/GameCover';
 import {useState} from 'react';
 
 const categoryInfo:Record<string,string>={
@@ -26,9 +27,7 @@ export default function GamesCatalog({games}:{games:any[]}){
       return <section className="skill-section" id={`${categorySlug(category)}-games`} key={category}>
         <div className="section-heading"><div><h2>{category} Games</h2><p>{categoryInfo[category]}</p></div></div>
         <div className="catalog-cards" id={`${categorySlug(category)}-cards`}>{(expanded[category]?categoryGames:categoryGames.slice(0,4)).map(game=><a href={`/play/${game.slug}`} className="catalog-card" key={game.slug}>
-          <div className="catalog-art" style={{background:game.color,color:game.ink}} aria-hidden="true">
-            <span className="catalog-art-mark">{game.icon}</span><span className="catalog-art-spark">✦</span>
-          </div>
+          <GameCover slug={game.slug} icon={game.icon}/>
           <div className="catalog-copy"><span className="tag">{game.access==='premium'?'Premium':game.practiceOnly?'Free practice':category}</span><h3>{game.name}</h3><p>{game.description}</p><span className="catalog-play">{game.access==='premium'?'View access':'Play now'} <span aria-hidden="true">↗</span></span></div>
         </a>)}</div>
         {categoryGames.length>4&&<div className="catalog-more"><button className="secondary" aria-expanded={!!expanded[category]} aria-controls={`${categorySlug(category)}-cards`} onClick={()=>setExpanded(previous=>({...previous,[category]:!previous[category]}))}>{expanded[category]?'Show less ↑':`More games (${categoryGames.length-4}) ↓`}</button></div>}
