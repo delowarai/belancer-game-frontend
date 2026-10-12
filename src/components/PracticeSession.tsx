@@ -1,0 +1,16 @@
+import {useEffect,useRef,useState} from 'react';
+import type {ReactNode} from 'react';
+import {api} from '../api/client';
+const keys:Record<string,string[]>={'bird-launch':['belancer-bird-progress-v1'],'nuts-bolts':['belancer-bolts-v1','belancer-bolts-spent-v1'],'highway-rush':['belancer-racing-v1'],'snake-arena':['belancer-snake-v1']};
+export default function PracticeSession({game,accountId,children}:{game:string;accountId:string|null;children:ReactNode}){
+ const [ready,setReady]=useState(false),[status,setStatus]=useState(''),[retry,setRetry]=useState(0),runId=useRef(crypto.randomUUID());
+ useEffect(()=>{let active=true,inFlight=false,conflict=false,revision=0,previous='',timer:ReturnType<typeof setInterval>|undefined;setReady(false);setStatus('');const gameKeys=keys[game]||[],scope=`belancer-save:${accountId||'guest'}:${game}`;
+ function snapshot(){return Object.fromEntries(gameKeys.map(key=>{try{return [key,localStorage.getItem(key)]}catch{return [key,null]}}))}
+ function restore(data:Record<string,string|null>){for(const key of gameKeys){try{if(data[key]===null||data[key]===undefined)localStorage.removeItem(key);else localStorage.setItem(key,data[key]!)}catch{}}}
+ async function save(){if(!active||inFlight||conflict||!gameKeys.length)return;try{const data=snapshot(),serialized=JSON.stringify(data);localStorage.setItem(scope,serialized);if(!accountId||serialized===previous)return;inFlight=true;const result=await api(`/practice/saves/${game}`,{revision,data});revision=result.revision;previous=serialized;if(active)setStatus('Campaign progress saved to your account.')}catch(e){const message=(e as Error).message;conflict=message.includes('another device');if(active)setStatus(conflict?message:'Account sync unavailable. Progress is kept on this browser; retrying automatically.')}finally{inFlight=false}}
+ async function init(){try{let cached:Record<string,string|null>|null=null;try{const raw=localStorage.getItem(scope);if(raw)cached=JSON.parse(raw);if(!accountId&&!cached){cached=snapshot();localStorage.setItem(scope,JSON.stringify(cached))}}catch{}if(accountId&&gameKeys.length){const saved=await api(`/practice/saves/${game}`);if(!active)return;revision=saved.revision;restore(saved.revision?saved.data:cached||{});previous=JSON.stringify(saved.revision?saved.data:{});if(active)setStatus('Campaign progress syncs to your account.')}else if(gameKeys.length)restore(cached||{});if(active){setReady(true);timer=setInterval(()=>void save(),5000)}if(accountId)void api('/practice/history',{runId:runId.current,game,outcome:'played'}).catch(()=>{})}catch(e){if(active)setStatus((e as Error).message)}}
+ void init();const flush=()=>void save();document.addEventListener('visibilitychange',flush);window.addEventListener('pagehide',flush);return()=>{void save();active=false;if(timer)clearInterval(timer);document.removeEventListener('visibilitychange',flush);window.removeEventListener('pagehide',flush)};
+ },[game,accountId,retry]);
+ if(!ready)return <section className="panel"><p role="status">{status||'Loading your game progress…'}</p>{status&&<button onClick={()=>setRetry(n=>n+1)}>Retry loading progress</button>}</section>;
+ return <>{children}{keys[game]&&<p className="muted practice-sync" role="status">{accountId?status:'Guest progress is saved on this browser. Sign in for account saves.'}</p>}</>;
+}
