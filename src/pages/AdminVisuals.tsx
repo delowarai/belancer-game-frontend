@@ -1,6 +1,6 @@
 import type {ReactNode} from 'react';
-export const sections=['Overview','Users','Games','Challenges','Results','Content','Audit'] as const;
-export const descriptions:Record<string,string>={Overview:'Your platform at a glance. Review activity and choose what needs attention.',Users:'Manage player access and trusted operators.',Games:'Tune ranked games, availability and instructions.',Challenges:'Schedule daily competitions and manage their lifecycle.',Results:'Review recorded attempts and keep rankings fair.',Content:'Keep your homepage, FAQ and contact information up to date.',Audit:'A traceable record of platform and account changes.'};
+export const sections=['Overview','Users','Games','Challenges','Results','Content','Monetization','Audit'] as const;
+export const descriptions:Record<string,string>={Overview:'Your platform at a glance. Review activity and choose what needs attention.',Users:'Manage player access and trusted operators.',Games:'Tune ranked games, availability and instructions.',Challenges:'Schedule daily competitions and manage their lifecycle.',Results:'Review recorded attempts and keep rankings fair.',Content:'Keep your homepage, FAQ and contact information up to date.',Monetization:'Manage payment options, premium access and orders.',Audit:'A traceable record of platform and account changes.'};
 const paths:Record<string,ReactNode>={
  Overview:<><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></>,
  Users:<><circle cx="9" cy="8" r="3"/><path d="M3 21v-3a6 6 0 0 1 12 0v3M16 5a3 3 0 0 1 0 6m3 10v-3a6 6 0 0 0-3-5"/></>,
