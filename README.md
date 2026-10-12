@@ -54,3 +54,9 @@ Original procedural Three.js racing at `/play/highway-rush`, listed under Speed 
 The garage includes three cars, five paints and four upgrade steps for speed, handling and brakes. Keyboard and simultaneous touch controls, auto/manual acceleration, pause on tab switch, engine audio, speed units, profile and result standings are included. WebGL/hardware acceleration is required. Models and environments are original geometric assets, not MR RACER assets.
 
 This is local practice: progress, cosmetic coins and XP save in this browser only. Competitors are AI, not online players. No account sync, real-money rewards or ranked leaderboard submission is implemented for racing. Server-authoritative ranked games remain separate.
+
+### Belancer Snake Arena
+
+`/play/snake-arena` is an original canvas practice game under Speed → More games. Six cosmetic skins, four arena themes, 16 AI competitors, a mini-map and live AI standings accompany Survival (3 minutes), Growth Sprint (800 weight in 90 seconds) and Endless modes. Mouse, keyboard, touch-point and floating-joystick controls are supported. Boost consumes weight; enemy body and boundary collisions end the run, while your own body is safe. Defeated AI snakes leave food and respawn.
+
+Run-end rewards, coins, XP, best weight, skin purchases, a once-per-browser-day gift/free wheel and a 30-food achievement chest save locally. Reward recording is guarded once per finished run. Sound effects and a volume slider start after a user gesture. These are local practice rewards, not real-money prizes or authoritative ranked scores; there is no online multiplayer or account synchronization. Clearing browser storage resets progress, and browser clocks/storage can be edited.
