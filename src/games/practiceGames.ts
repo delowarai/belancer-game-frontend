@@ -1,6 +1,7 @@
 export const categoryColors=['#1F7A70','#9ED8CF','#C2532D','#D2F53C'];
 
 export const additionalPracticeGames=[
+  {slug:'brain-quest',name:'Belancer Brain Quest',category:'Problem Solving',icon:'?',description:'Think beyond the obvious. Explore 12 notebook puzzles with taps, drags and helpful hints.',color:'var(--game-pairs-bg)',ink:'var(--game-pairs-fg)'},
   {slug:'nuts-bolts',name:'Nuts & Bolts',category:'Problem Solving',icon:'✚',description:'Move screws, release colorful plates and clear 20 workshop puzzles.',color:'var(--game-pairs-bg)',ink:'var(--game-pairs-fg)'},
   {slug:'mini-sudoku',name:'Mini Sudoku',category:'Math',icon:'▦',description:'Sudoku for a coffee break. Unique puzzles from 4×4 to 12×12 with notes and hints.',color:'var(--game-memory-bg)',ink:'var(--game-memory-fg)'},
   {slug:'bird-launch',name:'Belancer Bird Launch',category:'Problem Solving',icon:'➶',description:'Launch through 30 city districts, topple towers and collect stars and coins.',color:'var(--game-memory-bg)',ink:'var(--game-memory-fg)'},
