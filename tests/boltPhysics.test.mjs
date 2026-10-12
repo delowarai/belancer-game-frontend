@@ -41,3 +41,4 @@ test('Undo restores the exact swinging pose and velocity, including its hinge',(
  world.sync({occupied:[16,17],removed:[0],moves:2});for(let i=0;i<400;i++)world.step();world.sync({occupied:[0,16],removed:[],moves:1});world.restore(snapshot);
  assert.deepEqual(world.capture(),snapshot);for(let i=0;i<600;i++)world.step();assert.equal(world.fallen.size,0);assert.ok(world.planks.get(0).position.y>105);world.dispose();
 });
+test('hammer removes physical wood and undo restores its body and supports',()=>{const world=new BoltPhysics(level),state={occupied:[0,1],removed:[],moves:0};world.sync(state);const snapshot=world.capture();world.sync({...state,removed:[0],broken:[0],moves:1});assert.equal(world.fallen.has(0),true);assert.equal(world.canPlace(0),true);world.sync(state);world.restore(snapshot);assert.equal(world.fallen.size,0);assert.equal(world.pinSupportCount(0),1);assert.equal(world.canPlace(0),false);world.dispose()});
