@@ -15,6 +15,8 @@ export class BoltPhysics{
  private hinges=new Map<number,{hole:number;joint:Matter.Constraint}>();
  private attached=new Map<number,number[]>();
  private lastMove=0;
+ private exitHeight=570;
+ setExitHeight(height:number){if(Number.isFinite(height)&&height>=550)this.exitHeight=height;}
  private balancedFrames=new Map<number,number>();
  private filterContacts:(pairs:Matter.Pair[])=>void=()=>{};
  constructor(readonly level:BoltLevel){
@@ -37,13 +39,13 @@ export class BoltPhysics{
   }
  }
  private limitMotion(){for(const body of this.planks.values()){if(body.isStatic)continue;const speed=Math.hypot(body.velocity.x,body.velocity.y);if(speed>2.2)Body.setVelocity(body,{x:body.velocity.x*2.2/speed,y:body.velocity.y*2.2/speed});if(Math.abs(body.angularVelocity)>.018)Body.setAngularVelocity(body,Math.sign(body.angularVelocity)*.018)}}
- step(){this.limitMotion();this.filterContacts(this.engine.pairs.list);Engine.update(this.engine,1000/60);this.limitMotion();for(const id of this.released){const body=this.planks.get(id)!;
+ step(){const before=new Map([...this.planks].map(([id,b])=>[id,{x:b.position.x,y:b.position.y,angle:b.angle}]));this.limitMotion();this.filterContacts(this.engine.pairs.list);Engine.update(this.engine,1000/60);for(const [id,body] of this.planks){if(body.isStatic||this.fallen.has(id))continue;const previous=before.get(id)!,dx=body.position.x-previous.x,dy=body.position.y-previous.y,distance=Math.hypot(dx,dy);if(distance>6)Body.setPosition(body,{x:previous.x+dx*6/distance,y:previous.y+dy*6/distance});const turn=body.angle-previous.angle;if(Math.abs(turn)>.05)Body.setAngle(body,previous.angle+Math.sign(turn)*.05)}this.limitMotion();for(const id of this.released){const body=this.planks.get(id)!;
  // A loose plank cannot remain perfectly balanced on one rounded screw.
  const contacts=new Set<Body>();for(const pair of this.engine.pairs.list){if(!pair.isActive||pair.isSensor)continue;const a=pair.bodyA.parent,b=pair.bodyB.parent;if(a===body)contacts.add(b);else if(b===body)contacts.add(a)}
  const support=[...contacts][0],singlePin=contacts.size===1&&[...this.pins.values()].includes(support)&&support.position.y>body.position.y;
  const resting=singlePin&&body.speed<.25&&Math.abs(body.angularVelocity)<.01,count=resting?(this.balancedFrames.get(id)||0)+1:0;this.balancedFrames.set(id,count);
  if(count>=30){const direction=body.position.x<support.position.x?-1:1;Body.setVelocity(body,{x:direction*.6,y:body.velocity.y});Body.setAngularVelocity(body,direction*.025);this.balancedFrames.set(id,0)}
- if(!this.fallen.has(id)&&Math.min(...body.vertices.map(v=>v.y))>570){this.fallen.add(id);Composite.remove(this.engine.world,body)}}}
+ if(!this.fallen.has(id)&&Math.min(...body.vertices.map(v=>v.y))>this.exitHeight){this.fallen.add(id);Composite.remove(this.engine.world,body)}}}
  canPlace(hole:number){const p=boltPoint(hole),bodies=[...this.planks.keys()].filter(id=>!this.fallen.has(id)).map(id=>this.planks.get(id)!);return [[0,0],[-18,0],[18,0],[0,-18],[0,18]].every(([x,y])=>Query.point(bodies,{x:p.x+x,y:p.y+y}).length===0)}
  canSelect(hole:number){const p=boltPoint(hole);for(const plate of [...this.level.plates].reverse()){if(this.fallen.has(plate.id))continue;const body=this.planks.get(plate.id)!;if(Query.point([body],p).length)return (this.attached.get(plate.id)||[]).includes(hole)}return true}
  pinSupportCount(hole:number){return [...this.attached.values()].filter(holes=>holes.includes(hole)).length}
