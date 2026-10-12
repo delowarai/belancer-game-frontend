@@ -29,7 +29,7 @@ export default function GamesCatalog({games}:{games:any[]}){
           <div className="catalog-art" style={{background:game.color,color:game.ink}} aria-hidden="true">
             <span className="catalog-art-mark">{game.icon}</span><span className="catalog-art-spark">✦</span>
           </div>
-          <div className="catalog-copy"><span className="tag">{game.practiceOnly?'Free practice':category}</span><h3>{game.name}</h3><p>{game.description}</p><span className="catalog-play">Play now <span aria-hidden="true">↗</span></span></div>
+          <div className="catalog-copy"><span className="tag">{game.access==='premium'?'Premium':game.practiceOnly?'Free practice':category}</span><h3>{game.name}</h3><p>{game.description}</p><span className="catalog-play">{game.access==='premium'?'View access':'Play now'} <span aria-hidden="true">↗</span></span></div>
         </a>)}</div>
         {categoryGames.length>4&&<div className="catalog-more"><button className="secondary" aria-expanded={!!expanded[category]} aria-controls={`${categorySlug(category)}-cards`} onClick={()=>setExpanded(previous=>({...previous,[category]:!previous[category]}))}>{expanded[category]?'Show less ↑':`More games (${categoryGames.length-4}) ↓`}</button></div>}
       </section>;
