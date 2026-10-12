@@ -24,4 +24,5 @@ export const additionalPracticeGames=[
   {slug:'math-patterns',name:'Math Patterns',category:'Math',icon:'∑',description:'Spot the number pattern and work out the next step.',color:'var(--game-speed-bg)',ink:'var(--game-speed-fg)'},
   {slug:'snake-arena',name:'Belancer Snake Arena',category:'Speed',icon:'∿',description:'Feast, grow and outsmart 16 AI snakes. Collect skins and find your place in the arena.',color:'var(--game-memory-bg)',ink:'var(--game-memory-fg)'},
   {slug:'highway-rush',name:'Belancer Highway Rush',category:'Speed',icon:'⚑',description:'Race four AI rivals across 12 districts, unlock cars and earn your place on the podium.',color:'var(--game-memory-bg)',ink:'var(--game-memory-fg)'},
+  {slug:'bottle-garden',name:'Belancer Bottle Garden',category:'Problem Solving',icon:'◒',description:'Pour, match and unwind. Sort colorful bottles through 24 garden puzzles.',color:'var(--game-memory-bg)',ink:'var(--game-memory-fg)'},
 ].map(game=>({...game,practiceOnly:true}));

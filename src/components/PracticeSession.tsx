@@ -1,7 +1,7 @@
 import {useEffect,useRef,useState} from 'react';
 import type {ReactNode} from 'react';
 import {api} from '../api/client';
-const keys:Record<string,string[]>={'bird-launch':['belancer-bird-progress-v1'],'nuts-bolts':['belancer-bolts-v1','belancer-bolts-spent-v1'],'highway-rush':['belancer-racing-v1'],'snake-arena':['belancer-snake-v1']};
+const keys:Record<string,string[]>={'bottle-garden':['belancer-bottle-garden-v1'],'bird-launch':['belancer-bird-progress-v1'],'nuts-bolts':['belancer-bolts-v1','belancer-bolts-spent-v1'],'highway-rush':['belancer-racing-v1'],'snake-arena':['belancer-snake-v1']};
 export default function PracticeSession({game,accountId,children}:{game:string;accountId:string|null;children:ReactNode}){
  const [ready,setReady]=useState(false),[status,setStatus]=useState(''),[retry,setRetry]=useState(0),runId=useRef(crypto.randomUUID());
  useEffect(()=>{let active=true,inFlight=false,conflict=false,revision=0,previous='',timer:ReturnType<typeof setInterval>|undefined;setReady(false);setStatus('');const gameKeys=keys[game]||[],scope=`belancer-save:${accountId||'guest'}:${game}`;
