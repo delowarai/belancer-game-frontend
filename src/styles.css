@@ -352,4 +352,3 @@ header .account{gap:16px;min-width:0}
 .game-detail .game-cover{height:clamp(180px,28vw,360px)}
 @media(prefers-reduced-motion:reduce){.game-cover img{transition:none}.catalog-card:hover .game-cover img,.catalog-card:focus-visible .game-cover img{transform:none}}
 
-.portfolio-demo-notice{margin:20px 0 0;padding:14px 18px;border:1px solid var(--color-border);border-radius:12px;background:var(--color-soft);font-size:12px;color:var(--color-text-deep)}
