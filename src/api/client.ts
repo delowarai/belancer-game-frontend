@@ -1,4 +1,13 @@
+import {defaultGames} from '../games/catalog';
+import {additionalPracticeGames} from '../games/practiceGames';
+export const portfolioDemo = (import.meta as any).env.VITE_PORTFOLIO_DEMO === 'true';
 export async function api<T = any>(path: string, body?: unknown): Promise<T> {
+  if(portfolioDemo){
+    if(body!==undefined)throw new Error('Account services are not enabled in this portfolio demo.');
+    if(path==='/games')return [...defaultGames,...additionalPracticeGames].map(g=>({...g,access:'free',available:true})) as T;
+    if(path.startsWith('/games/')&&path.endsWith('/access'))return {available:true,allowed:true,access:'free',accountId:null,signedIn:false} as T;
+    throw new Error('This portfolio demo offers free local practice. Account services are not enabled.');
+  }
   let res: Response;
   try {
     res = await fetch('/api' + path, {credentials:'same-origin', headers:{'Content-Type':'application/json','X-Requested-With':'Belancer'}, ...(body === undefined ? {} : {method:'POST',body:JSON.stringify(body)})});

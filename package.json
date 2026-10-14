@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite --host 127.0.0.1 --port 5176 --strictPort",
     "build": "tsc -b && vite build",
+    "build:portfolio": "tsc -b && vite build --mode portfolio",
     "test": "tsc src/games/metroRun.ts src/games/brainQuest.ts src/games/bottleSort.ts src/games/practiceQuestions.ts src/games/engine.ts src/games/practiceGames.ts src/games/birdAim.ts src/games/birdLevels.ts src/games/sudoku.ts src/games/bolts.ts src/games/boltPhysics.ts src/games/racing.ts src/games/snakeArena.ts --target ES2022 --module ES2022 --esModuleInterop --skipLibCheck --outDir .test-build && node --test tests/engine.test.mjs tests/birdAim.test.mjs tests/birdLevels.test.mjs tests/sudoku.test.mjs tests/bolts.test.mjs tests/boltPhysics.test.mjs tests/boltCampaign.test.mjs tests/racing.test.mjs tests/snakeArena.test.mjs tests/practiceQuestions.test.mjs tests/bottleSort.test.mjs tests/brainQuest.test.mjs tests/metroRun.test.mjs",
     "preview": "vite preview --host 127.0.0.1"
   },
