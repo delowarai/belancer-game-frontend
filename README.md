@@ -1,64 +1,165 @@
-# Belancer Game frontend
+# Belancer Game
 
-Requires Node.js 22+ and npm. Open this repository in WebStorm and select your Node.js interpreter.
+**A browser game platform with 36 playable games, interactive 2D/3D experiences, and a separate FastAPI backend for accounts, administration and server-authoritative ranked play.**
 
-```powershell
+[Play the live demo](https://belancer-game.netlify.app) · [Explore the games](https://belancer-game.netlify.app/games) · [Backend repository](https://github.com/delowarai/belancer-game-backend)
+
+## At a glance
+
+This project combines game development with the features needed to manage a game platform. The React frontend includes a categorized catalog, responsive controls, game progression and a branded admin workspace. The companion backend handles authentication, access policies, audited administration and ranked scoring.
+
+**The public Netlify deployment is a free, browser-only portfolio build.** Visitors can play without an account, and the developer's computer does not need to be running. Account services, shared leaderboards, administration and payments belong to the backend-connected application; they are not active on the public demo.
+
+| Area | Implementation |
+| --- | --- |
+| UI | React 19, TypeScript, Vite and reusable components |
+| Game development | Canvas, SVG, Three.js, Matter.js and testable TypeScript game logic |
+| Platform | 36 games across memory, speed, attention, flexibility, math, word and problem-solving categories |
+| Backend | FastAPI, SQLAlchemy and Alembic in the companion repository |
+| Ranked play | Five backend-supported games; server validates actions and calculates results |
+| Administration | Players, game settings, challenges, result moderation, content, monetization and audit records |
+| Deployment | Netlify portfolio build, GitHub integration and direct-link routing |
+
+## Try these first
+
+These games show different parts of the implementation:
+
+| Game | What to look for | Play |
+| --- | --- | --- |
+| **Metro Run** | Procedural Three.js environment, three-lane movement, jump/slide collisions, power-ups, outfits and sound controls | [Open game](https://belancer-game.netlify.app/play/metro-run) |
+| **Highway Rush** | 3D driving, AI competitors, multiple modes, garage customization and progression | [Open game](https://belancer-game.netlify.app/play/highway-rush) |
+| **Nuts & Bolts** | Overlapping SVG plates, screw transfers, Matter.js gravity, undo, hints and 20 workshop levels | [Open game](https://belancer-game.netlify.app/play/nuts-bolts) |
+| **Bottle Garden** | 24 sorting puzzles, legal pour rules, animated bottle movement, hints and undo | [Open game](https://belancer-game.netlify.app/play/bottle-garden) |
+| **Bird Launch** | Drag-and-release aiming, physics-based collisions and 30 progressively harder districts | [Open game](https://belancer-game.netlify.app/play/bird-launch) |
+| **Brain Quest** | 12 notebook-style puzzles with tap, drag, reveal and learning feedback | [Open game](https://belancer-game.netlify.app/play/brain-quest) |
+| **Snake Arena** | Canvas rendering, AI opponents, mini-map, game modes, cosmetics and volume settings | [Open game](https://belancer-game.netlify.app/play/snake-arena) |
+| **Mini Sudoku** | Multiple board sizes, unique puzzles, notes, keyboard controls and guided hints | [Open game](https://belancer-game.netlify.app/play/mini-sudoku) |
+
+<p align="center">
+  <img src="public/game-covers/metro-run.svg" width="30%" alt="Metro Run game cover" />
+  <img src="public/game-covers/bottle-garden.svg" width="30%" alt="Bottle Garden game cover" />
+  <img src="public/game-covers/brain-quest.svg" width="30%" alt="Brain Quest game cover" />
+</p>
+
+*Game cover illustrations above; open the links to see the playable experiences.*
+
+## What I built
+
+- A responsive game catalog with skill categories, individual game pages and illustrated covers.
+- Interactive game experiences with dedicated engines and presentation layers, rather than one shared quiz template for every game.
+- Keyboard, mouse and touch controls where supported, including swipe controls, drag interactions and on-screen buttons.
+- Progression systems with level unlocking, replay, stars, cosmetic rewards, local saves and optional account synchronization in the full application.
+- Pause/resume behavior, sound settings, loading states and game error boundaries.
+- A Belancer visual theme using deep teal, lime, mint and cream, with light/dark presentation.
+- A responsive admin dashboard with summary metrics, backend-recorded activity charts, recent changes and management workflows.
+- A dedicated deployment mode that makes the playable demo independent of the backend and the developer's PC.
+
+The companion backend implements session authentication, account settings, versioned game configuration, per-game rankings, score moderation, premium access policies and payment-provider integration code. Administrative mutations require a reason and produce an audit record.
+
+## Architecture and important decisions
+
+```text
+Public portfolio deployment
+Netlify -> React application -> TypeScript game engines
+                              -> Canvas / SVG / Three.js / Matter.js
+                              -> Browser-local progress
+
+Backend-connected application
+React application -> same-origin /api -> FastAPI
+                                        -> SQLAlchemy database
+                                        -> Account, ranking and admin services
+                                        -> Verified payment notifications
+```
+
+**Practice and ranked scores are separated.** Practice runs can execute locally. In ranked play, the backend validates recorded actions and computes the result; it does not accept a browser score as authoritative. Rankings are separated by game and configuration profile so unrelated games and rule sets are not combined.
+
+**Game logic is separated from rendering.** Modules in `src/games/` define rules, progression and simulation. Components in `src/game-shell/` provide the playable interface. This makes core behavior easier to test independently of the DOM.
+
+**The portfolio build is explicit.** `VITE_PORTFOLIO_DEMO=true` supplies the local catalog and free access without API requests for those services. The regular application build retains backend integration. The public demo does not pretend to provide authenticated accounts or shared rankings.
+
+**Progress has a clear scope.** Demo progress stays in the visitor's browser. Clearing site data resets it; it does not transfer between devices. In the full application, supported campaigns can synchronize with signed-in accounts.
+
+## Run locally
+
+### Free portfolio mode — no backend required
+
+Requirements: **Node.js 22+** and npm.
+
+```bash
+npm ci
+npm run dev -- --mode portfolio
+```
+
+Open `http://localhost:5176`.
+
+Build and preview the static demo:
+
+```bash
+npm run build:portfolio
+npm run preview
+```
+
+Use the preview URL printed by Vite. Netlify reads `netlify.toml` and builds the same portfolio mode. The routing fallback allows direct links such as `/play/metro-run` to open correctly.
+
+### Full application — frontend and backend
+
+Start the companion backend on port `8000` following its [setup instructions](https://github.com/delowarai/belancer-game-backend#readme), then run:
+
+```bash
 npm ci
 npm run dev
 ```
 
-Open http://localhost:5176. The backend must be running on http://localhost:8000. Vite proxies `/api` to it; cookies stay on the browser origin. Port 5173 is enforced so the frontend origin matches the backend CSRF configuration. If it is occupied, stop the other server first.
+The frontend runs on port **5176** and proxies `/api` to `http://127.0.0.1:8000`. `.env.example` documents the optional backend proxy override. Keep one hostname consistent during login because cookies are hostname-specific.
 
-The proxy connects directly to `127.0.0.1:8000` to avoid localhost IPv6 resolution differences. The updated backend also accepts opening the frontend at `http://127.0.0.1:5176` during local development. Use one hostname consistently after login.
-
-```powershell
+```bash
 npm run build
 ```
 
-This produces `dist/` for hosting. Vite preview previews static output only; it does not provide the development API proxy. Do not use it as the full application server.
+A normal Vite preview serves static assets; it does not supply the development API proxy. A hosted full application needs an API routing setup and a persistent database.
 
-Smoke check: register, log out, log in, play a Math Sprint challenge, open the leaderboard and dashboard. Practice can run without login; ranked challenges require the API.
+## Tests and validation
 
-The games catalog groups activities by skill and includes several local practice games in each category. Local practice scores are not stored in ranked progress or leaderboards; ranked play remains limited to games supported by the backend. The homepage also explains the available skill areas, offers play tips and FAQs, and links visitors to the game catalog and daily challenges.
+```bash
+# Frontend game-engine tests
+npm test
 
-Never commit `.env`, local IDE configuration or dependency folders.
+# TypeScript checks and production bundling
+npm run build
+npm run build:portfolio
 
-Step 2 includes adaptive Memory Grid practice, timed games, ranked rules v2, action retries, and same-browser session recovery. Backend migrations must be upgraded at the same time. Game-engine tests: `npm test`.
+# Run in the companion backend repository
+python -m pytest tests -q
+```
 
-Step 3 adds `/admin` with Overview, Users, Games, Challenges, Results, Content and Audit. The backend must be migrated to 0003. Provision your first admin using the operator command in the backend README; refresh the browser to see the Admin link. Game settings and public content come from the API; published challenge configuration remains fixed.
+Engine tests cover behavior such as valid moves, puzzle solutions, physics interactions, progression, collision handling and malformed saved data. Backend tests cover authentication, authorization, ranked sessions, moderation, access policies and payment verification.
 
-Step 4: /settings supports username/password updates and sign out everywhere; /dashboard and /progress show per-game metrics, UTC streaks and paginated activity. Pull the matching backend and restart both servers.
+The latest backend validation completed with **85 passing tests**. The portfolio production build also passed. Automated tests do not replace gameplay, device and accessibility checks.
 
-Step 5: /leaderboards supports daily, weekly and all-time periods, UTC dates, challenge setting profiles, your rank and pagination. Pull the matching backend before restarting.
+## Repository guide
 
-Brand palette: all screens use the Belancer UI/UX Kit 2026 colors through src/theme.css. See [docs/BRAND_THEME.md](docs/BRAND_THEME.md) for tokens and visual validation. Restart Vite after pulling.
+```text
+src/
+  api/              HTTP client and portfolio-mode behavior
+  components/       Shared UI, access handling and save coordination
+  games/            Game rules, simulation, level data and catalog
+  game-shell/       Playable game screens and rendering
+  pages/            Catalog, account, billing and administration UI
+  theme.css         Belancer color tokens
+public/
+  game-covers/      Individual SVG game cover illustrations
+tests/              Game-engine regression tests
+netlify.toml        Portfolio build and SPA routing configuration
+```
 
-Belancer Bird Launch: open `/play/bird-launch` or choose it in the catalog. After the shared countdown, drag the supplied bird and release. Angle/power sliders are hidden; keyboard users can focus the canvas, use arrows to aim, +/− to change pull and Space to launch. Matter.js handles tower collisions. There are 30 distinct levels with sequential unlocking, replay, variable shot budgets, stars, collectible badges and 50–575 practice coins per completed level. Coins are collected once per level; replay can improve the best stars. Progress is saved in this browser's local storage and is shared by users of that browser, not synchronized with an account or backend. These rewards have no monetary value and never affect ranked API scores or leaderboards. Run `npm ci` after pulling to install the physics dependency.
+## Current scope and limitations
 
-Bird Launch city update: colored bird targets replace bullseyes. Day, sunset and night skylines follow the level tiers; platforms have wood grain, metal bands and bolts. Each level increases platform density and target impact resistance, later levels add permanent steel barriers, and shots per target tighten. Level completion opens an accessible modal with earned coins, current level points, total saved coins/points, badge and stars. Coins remain once per level and saved points keep the best completed score (100 per cleared bird plus 50 per remaining shot). Existing star-only browser saves migrate automatically. These are local practice rewards; clearing browser data removes them. Difficulty is a handcrafted demo and may need further balancing from play feedback.
+- The live site is a playable portfolio demonstration, not a production payment service.
+- AI competitors in racing and Snake Arena are local computer opponents, not online multiplayer users.
+- Local coins, stars and XP are cosmetic practice rewards with no monetary value.
+- The 3D games require WebGL and hardware acceleration; performance varies by device.
+- The full backend includes Stripe and SSLCommerz integration code, but live merchant credentials and payments are not enabled for this demo.
+- Game difficulty and physics are handcrafted and may need further balancing through play feedback.
+- These games are recreational learning activities; scores are not IQ measurements or medical assessments.
 
-Mini Sudoku is available at `/play/mini-sudoku` and under Math in the catalog. It offers uniquely solvable 6×6 (2×3 boxes), 8×8 (2×4 boxes), and 10×10 (2×5 boxes) puzzles, Easy/Medium/Hard, timer, notes, clear, undo, reset and three hints per puzzle/reset. Hint highlights its row/column and explains a logical single or, when necessary, explicitly labels a solution reveal; Fill it applies it. Dismissing a hint does not refund it, and Undo does not refund used hints. Keyboard arrows select cells, number keys enter digits, Delete clears, and 0 enters 10 on the largest board. Size/difficulty changes start a new puzzle and discard the current session. This game is local practice only and has no ranked API score.
-
-Additional Sudoku board sizes: 4×4 (2×2 boxes), classic 9×9 (3×3 boxes), and 12×12 (3×4 boxes). All six sizes support unique puzzles and guided hints. Use the number buttons for 11 and 12; keyboard 0 enters 10.
-
-Bird Launch presentation includes animated city scenery, flight trails, hit feedback, optional synthesized sound (off by default), pause/resume (P), expanded playfield and district cards. Reduced-motion preferences suppress decorative motion. The 30-level adventure and cosmetic coins/stars remain browser-local practice rewards, not authoritative ranked scores or account-synced currency.
-
-Campaign progression: levels 1–5 Easy, 6–15 Medium, 16–30 Hard. Existing 11-level saves retain their completed stars and points; new districts unlock sequentially. The mission dashboard shows shot tokens, clear progress and total rewards. Platform trims and reinforced footings are visual details; difficulty comes from actual density, impact thresholds, barriers and shot budgets. First-launch physics remains frozen to prevent pre-shot collapse.
-
-Nuts & Bolts: `/play/nuts-bolts` is an original SVG workshop puzzle with 20 Easy/Medium/Hard levels. Select an exposed screw and move it into an uncovered level hole or a limited spare hole. Shared screws support multiple overlapping plates; a plate swings down around its remaining screw, then drops when that last screw is removed. Undo restores the previous screw layout and exact plank poses and velocities, hints show a legal transfer, pause stops the timer, and restart resets the current level. Mouse, touch, Tab/Enter/Space and optional synthesized sound are supported. Stars and once-per-level coins save locally under `belancer-bolts-v1`; these cosmetic practice rewards are not account-synced or ranked. Released planks use Matter.js gravity, friction and collisions with remaining screws and other planks. A caught plank remains visible; moving the blocking screw releases it. Rewards wait for every plank to leave the board. Undo restores physical poses. Only original plank holes and limited spare holes are available in early levels. Dense later layouts add two recovery holes (three in the last two levels), verified with collision-based solutions. Selection and hints use current plank geometry. Tests verify actual collision-based solutions across all 20 levels. Timer and physics pause while the page is hidden. Stars and rewards remain browser-local practice progress.
-
-### Belancer Highway Rush
-
-Original procedural Three.js racing at `/play/highway-rush`, listed under Speed (More games). Career and Time Challenge each have 12 progressively harder districts and four AI competitors. Top-three finishes unlock the next race. First/improved podium stars award the reward difference; replaying the same finish awards no additional coins. Endless and Free Ride include traffic, rivals and a manual End Drive option.
-
-The garage includes three cars, five paints and four upgrade steps for speed, handling and brakes. Keyboard and simultaneous touch controls, auto/manual acceleration, pause on tab switch, engine audio, speed units, profile and result standings are included. WebGL/hardware acceleration is required. Models and environments are original geometric assets, not MR RACER assets.
-
-This is local practice: progress, cosmetic coins and XP save in this browser only. Competitors are AI, not online players. No account sync, real-money rewards or ranked leaderboard submission is implemented for racing. Server-authoritative ranked games remain separate.
-
-### Belancer Snake Arena
-
-`/play/snake-arena` is an original canvas practice game under Speed → More games. Six cosmetic skins, four arena themes, 16 AI competitors, a mini-map and live AI standings accompany Survival (3 minutes), Growth Sprint (800 weight in 90 seconds) and Endless modes. Mouse, keyboard, touch-point and floating-joystick controls are supported. Boost consumes weight; enemy body and boundary collisions end the run, while your own body is safe. Defeated AI snakes leave food and respawn.
-
-Run-end rewards, coins, XP, best weight, skin purchases, a once-per-browser-day gift/free wheel and a 30-food achievement chest save locally. Reward recording is guarded once per finished run. Sound effects and a volume slider start after a user gesture. These are local practice rewards, not real-money prizes or authoritative ranked scores; there is no online multiplayer or account synchronization. Clearing browser storage resets progress, and browser clocks/storage can be edited.
-
-Nuts & Bolts workshop boosters: Unscrew removes an exposed screw, Hammer removes a chosen visible plank while retaining its screws, and Unlock Hole adds one spare hole per attempt. Each successful action costs 50 local practice coins; invalid actions are free and Undo restores both the physical snapshot and spending. A browser receives 100 starter coins; first clears award level coins once. Restart does not refund used boosters. Timer and physics pause while a booster dialog is open. These browser-local coins have no ranked value.
+For hosting steps, see [Portfolio deployment](PORTFOLIO_DEPLOY.md). For brand tokens, see [Brand theme](docs/BRAND_THEME.md). Older development notes are preserved in [Implementation history](docs/IMPLEMENTATION_HISTORY.md).
