@@ -117,3 +117,48 @@ main:has(.admin-shell){max-width:1480px}
   .admin-sidebar-note p{font-size:13px}
   .admin-sidebar-note a{font-size:13px}
 }
+/* Belancer dashboard: cream workspace, teal activity and lime highlights. */
+.admin-analytics-grid{display:grid;grid-template-columns:minmax(0,2.3fr) minmax(240px,1fr);gap:20px;margin-bottom:20px}
+.admin-block-heading .eyebrow{font-size:9px;margin-bottom:8px}
+.admin-block-heading select{width:auto;max-width:160px;padding:8px 12px;font-size:11px}
+.admin-chart-summary{display:flex;align-items:baseline;gap:12px;margin:20px 0}
+.admin-chart-summary strong{font-size:34px;font-family:var(--font-heading)}
+.admin-chart-summary span,.admin-chart-legend{font-size:11px;color:var(--color-muted)}
+.admin-chart-legend{display:flex;gap:20px;margin-bottom:18px}
+.admin-chart-legend span:first-child{color:var(--color-teal)}
+.admin-chart-legend span:last-child{color:var(--color-text-deep)}
+.admin-bar-chart{display:flex;gap:8px;height:210px;padding-top:12px;background:repeating-linear-gradient(to top,transparent 0,transparent 49px,var(--color-border) 50px,transparent 51px)}
+.admin-chart-day{display:flex;flex:1;min-width:0;flex-direction:column;gap:10px;align-items:center}
+.admin-bar-pair{display:flex;align-items:flex-end;gap:3px;width:100%;height:180px}
+.admin-bar-pair i{flex:1;background:var(--color-teal);border-radius:5px 5px 0 0;min-width:2px}
+.admin-bar-pair i:last-child{background:var(--color-mint)}
+.admin-chart-day small{font-size:8px;color:var(--color-muted)}
+.admin-chart-note{margin:22px 0 0!important;font-size:10px!important}
+.admin-highlight{display:flex;flex-direction:column;align-items:start;background:var(--color-deep);color:var(--color-on-dark);position:relative;overflow:hidden}
+.admin-highlight .eyebrow,.admin-highlight p{color:var(--color-mint)}
+.admin-shell .admin-highlight h2{font-size:27px;line-height:1.3;margin:20px 0 12px}
+.admin-highlight>svg{width:90px;height:90px;color:var(--color-lime);margin:8px 0 24px;transform:rotate(-10deg)}
+.admin-highlight button{font-size:11px;width:100%;margin-top:auto}
+.admin-highlight button.secondary{margin-top:12px;background:transparent;color:var(--color-mint);border-color:var(--color-teal)}
+.admin-popular{margin-bottom:20px}
+.admin-popular-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 32px}
+.admin-popular-list>div{display:flex;align-items:center;gap:14px;font-size:11px}
+.admin-popular-list>div>div{flex:1}
+.admin-popular-list strong{text-transform:capitalize;font-size:12px}
+.admin-popular-rank{font-size:17px;font-family:var(--font-heading);color:var(--color-teal)}
+.admin-popular-track{height:5px;margin-top:9px;border-radius:8px;background:var(--color-soft);overflow:hidden}
+.admin-popular-track i{display:block;height:100%;background:var(--color-teal);border-radius:8px}
+@media(max-width:1100px){.admin-analytics-grid{grid-template-columns:1fr}.admin-highlight>svg{display:none}.admin-highlight button{max-width:280px}.admin-highlight{padding:24px}.admin-popular-list{grid-template-columns:1fr}}
+@media(max-width:600px){.admin-bar-chart{gap:4px}.admin-chart-day small{font-size:7px;transform:rotate(-40deg);margin-top:4px}.admin-chart-summary{flex-wrap:wrap}.admin-block-heading select{max-width:125px}}
+/* Keep desktop administration in one stable viewport with independent panes. */
+@media(min-width:781px){
+  html:has(.admin-shell),body:has(.admin-shell){height:100%;overflow:hidden}
+  #root:has(.admin-shell){height:100svh;min-height:0;overflow:hidden}
+  #root:has(.admin-shell)>header{flex:0 0 auto}
+  #root:has(.admin-shell)>.site-footer{display:none}
+  main:has(.admin-shell){flex:1 1 0;min-height:0;max-width:none;overflow:hidden}
+  .admin-shell{height:100%;min-height:0;align-items:stretch;overflow:hidden;padding:20px 0}
+  .admin-shell .admin-sidebar{position:static;height:100%;min-height:0;overflow-y:auto;overscroll-behavior-y:contain;scrollbar-gutter:stable;overflow-anchor:none}
+  .admin-workspace{height:100%;min-height:0;overflow-y:auto;overscroll-behavior-y:contain;scrollbar-gutter:stable;overflow-anchor:none;padding:0 12px 24px 0}
+}
+@media(max-width:780px){.admin-shell{overflow-anchor:none}.admin-workspace{scroll-margin-top:16px}}
